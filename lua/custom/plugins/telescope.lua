@@ -67,6 +67,18 @@ return {
           theme = "ivy",
           previewer = false
         },
+        lsp_document_symbols = {
+          sort_lastused = true,
+          symbol_width = 100,
+          show_line = false,
+          ignore_current_buffer = true,
+          previewer = false,
+          theme = "ivy",
+          symbols = {
+            "method",
+            "function"
+          }
+        },
         oldfiles = {
           sort_lastused = true,
           cwd_only = true,
@@ -112,6 +124,7 @@ return {
       end,
       {desc = "[S]earch [F]iles"}
     )
+    vim.keymap.set("n", "<leader>gd", builtin.lsp_document_symbols, {desc = "[S]earch [S]elect Telescope"})
     vim.keymap.set("n", "<leader>ss", builtin.builtin, {desc = "[S]earch [S]elect Telescope"})
     vim.keymap.set("n", "<leader>fw", builtin.grep_string, {desc = "[S]earch current [W]ord"})
     vim.keymap.set("n", "<leader>fg", builtin.live_grep, {desc = "[S]earch by [G]rep"})

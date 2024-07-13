@@ -5,7 +5,7 @@ let g:vdebug_options['ide_key'] = 'PHPSTORM'
 let g:vdebug_options['break_on_open'] = 1
 " Use the compact window layout.
 let g:vdebug_options['watch_window_style'] = 'compact'
-let g:vdebug_options['debug_file'] = '~/vdebug.log'
+let g:vdebug_options['debug_file'] = '/home/ixpectus/vdebug.log'
 let g:vdebug_options['debug_level'] = 2
 
 
