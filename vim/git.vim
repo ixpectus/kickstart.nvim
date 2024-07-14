@@ -1,7 +1,7 @@
 " (g)it (b)lame
 nmap <Leader>gb :Git blame<Cr>
 " (g)it (s)tatus
-nmap <Leader>gs :G<Cr>
+nmap <Leader>gs :top G<Cr>
 " (g)it (f)ile (h)istory
 nmap <Leader>gfh :BCommits<Cr>
 " (g)it (t)ree (h)istory
