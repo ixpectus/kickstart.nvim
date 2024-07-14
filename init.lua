@@ -456,7 +456,8 @@ require("lazy").setup(
             {name = "nvim_lsp"},
             {name = "luasnip"},
             {name = "path"},
-            {name = "buffer"}
+            {name = "buffer"},
+            {name = "vim_dadbod_completion"}
           }
         }
       end
@@ -564,6 +565,7 @@ require("lazy").setup(
     require "custom.plugins.telescope",
     require "custom.plugins.nvim-tmux-navigation",
     require "custom.plugins.nvim-lsp",
+    require "custom.plugins.dadbod",
     require "kickstart.plugins.debug",
     require "kickstart.plugins.indent_line",
     require "kickstart.plugins.lint",
