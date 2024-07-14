@@ -71,10 +71,6 @@ function CmdGetProjectName()
   let projectName = pp[-1]
   return projectName
 endfunction
-function GetStashPath()
-  let path = split(system('git remote -v | grep fetch | sed -E "s/.+\/([^\/]+)\/([^\/]+)\.git.+/http:\/\/stash.msk.avito.ru\/projects\/\1\/repos\/\2\/browse\//g"'), '\n')[0]
-  return v:shell_error ? '' : path
-endfunction
 function CmdGetCurrentTestName() 
   let fileName = expand("%:p")
   let lineNumber = line(".")
@@ -125,18 +121,11 @@ function CmdGoMoqGenerate()
   let cmd = "//go:generate moq -stub -out mock.go . " . res
   execute ":call system('xclip -selection clipboard', '" . cmd . "')"
 endfunction
-function CmdOpenStashRoot()
- :execute ':!firefox ' . GetStashPath()
-endfunction
-
-function CmdOpenStashFile()
- :execute ':!firefox ' . GetStashPath() . expand("%") . '\#' . line(".")
-endfunction
 
 function CmdBlameTask()
  let cmd = 'git show $(git blame -L' . line(".") . ',' . line(".") . ' ' . expand("%") ." | awk '{print $1}') | grep -E '[A-Z]+\-[0-9]+' | head -n1 | sed -E 's/([A-Z]+\-[0-9]+).+/\\1/g' | sed 's/ //g'"
  let task = System(cmd)
- let url = 'https://jr.avito.ru/browse/' . task
+ let url = $TASK_TRACKER . task
  :execute ':!firefox ' . url
 endfunction
 
@@ -238,7 +227,6 @@ command! -nargs=? -complete=command CmdGitFileTopContributorsRecent call CmdGitF
 command! -nargs=? -complete=command CmdGitProjectTopContributorsRecent call CmdGitProjectTopContributorsRecent()
 command! -nargs=1 -complete=command R call CmdMineRedir(<q-args>)
 command! -nargs=1 -complete=command L call CmdMineLua(<q-args>)
-command! -nargs=1 -complete=command GetStashPath call GetStashPath()
 command! -nargs=? -complete=command CmdYankHistory call CmdYankHistory()
 command! -nargs=* Exec call CmdRunCurrentScript(<f-args>)
 command! -nargs=* CmdRunTest call CmdRunTest(<f-args>)
