@@ -553,6 +553,7 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'custom.plugins.telescope',
+  require 'custom.plugins.go',
   require 'custom.plugins.nvim-tmux-navigation',
   require 'custom.plugins.nvim-lsp',
   require 'custom.plugins.fugitive',
