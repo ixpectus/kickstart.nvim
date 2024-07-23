@@ -19,7 +19,7 @@ return {
     hijack_netrw = true,
     open_on_tab = false,
     hijack_cursor = false,
-    update_cwd = false,
+    update_cwd = true,
     diagnostics = {
       enable = false,
       icons = {
@@ -30,8 +30,8 @@ return {
       },
     },
     update_focused_file = {
-      enable = false,
-      update_cwd = false,
+      enable = true,
+      update_root = true,
       ignore_list = {},
     },
     system_open = {
