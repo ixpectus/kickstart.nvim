@@ -23,4 +23,7 @@ return {
     }
     require('telescope').load_extension 'repo'
   end,
+  keys = {
+    { '<leader>tr', ':Telescope repo<Cr>', { desc = 'Telescope repos' } },
+  },
 }
