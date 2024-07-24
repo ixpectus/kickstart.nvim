@@ -546,12 +546,14 @@ require('lazy').setup({
   --
   require 'custom.plugins.telescope',
   require 'custom.plugins.telescope-repo',
+  require 'custom.plugins.telescope-file-history',
   require 'custom.plugins.go',
   require 'custom.plugins.nvim-tmux-navigation',
   require 'custom.plugins.nvim-lsp',
   require 'custom.plugins.fugitive',
   require 'custom.plugins.markdown-preview',
   require 'custom.plugins.dadbod',
+  require 'custom.plugins.diffview',
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
@@ -589,3 +591,5 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+require 'custom.commands'
+--

@@ -7,15 +7,9 @@ return {
     require('telescope').setup {
       extensions = {
         repo = {
-          settings = {
-            auto_lcd = true,
-          },
           list = {
             fd_opts = {
               '--no-ignore-vcs',
-            },
-            search_dirs = {
-              '~/pg_pro/',
             },
           },
         },
@@ -24,6 +18,11 @@ return {
     require('telescope').load_extension 'repo'
   end,
   keys = {
-    { '<leader>tr', ':Telescope repo<Cr>', { desc = 'Telescope repos' } },
+    { '<leader>tp', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/pg_pro"}}<Cr>', { desc = 'Telescope repos pg pro' } },
+    {
+      '<leader>rn',
+      ':lua require"telescope".extensions.repo.list{search_dirs = {"~/.local/share/kickstart.nvim/lazy/"}}<Cr>',
+      { desc = 'Telescope repos nvim plugins' },
+    },
   },
 }
