@@ -416,6 +416,7 @@ require('lazy').setup({
           { name = 'path' },
           { name = 'buffer' },
           { name = 'vim_dadbod_completion' },
+          { name = 'supermaven' },
         },
       }
     end,
@@ -527,6 +528,7 @@ require('lazy').setup({
   require 'custom.plugins.nvim-tree',
   require 'custom.plugins.spectre',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'custom.plugins.supermaven',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.

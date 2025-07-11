@@ -223,14 +223,14 @@ return {
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-    vim.api.nvim_create_autocmd('BufEnter', {
-      pattern = '*.go',
-      callback = function()
-        if not vim.tbl_contains(vim.lsp.get_active_clients(), 'gopls') then
-          vim.lsp.start { name = 'gopls', cmd = { 'gopls' }, root_dir = vim.fs.dirname(vim.fs.find({ 'go.mod' }, { upward = true })[1]) }
-        end
-      end,
-    })
+    -- vim.api.nvim_create_autocmd('BufEnter', {
+    --   pattern = '*.go',
+    --   callback = function()
+    --     if not vim.tbl_contains(vim.lsp.get_active_clients(), 'gopls') then
+    --       vim.lsp.start { name = 'gopls', cmd = { 'gopls' }, root_dir = vim.fs.dirname(vim.fs.find({ 'go.mod' }, { upward = true })[1]) }
+    --     end
+    --   end,
+    -- })
 
     require('mason-lspconfig').setup {
       ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
