@@ -128,7 +128,6 @@ return {
     vim.keymap.set('n', '<leader><leader>', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
     vim.keymap.set('n', '<Space>', builtin.buffers, { desc = '[ ] Find existing buffers' })
     vim.api.nvim_create_user_command('Rg', function(opts)
-      print(vim.inspect(opts))
       local grepOpts = {
         additional_args = {},
       }

@@ -15,7 +15,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
   desc = 'Change working directory to project root',
   callback = function(ev)
-    local root = GetProjectRoot()
-    vim.fn.execute('lcd ' .. root)
+    -- vim.fn.execute('lcd ' .. GetProjectRoot())
   end,
 })
