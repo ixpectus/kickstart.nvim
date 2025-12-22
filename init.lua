@@ -345,6 +345,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
     },
     config = function()
       -- See `:help cmp`
@@ -416,7 +417,7 @@ require('lazy').setup({
           { name = 'path' },
           { name = 'buffer' },
           { name = 'vim_dadbod_completion' },
-          { name = 'supermaven' },
+          -- { name = 'supermaven' },
         },
       }
     end,
@@ -527,8 +528,10 @@ require('lazy').setup({
   require 'kickstart.plugins.autopairs',
   require 'custom.plugins.nvim-tree',
   require 'custom.plugins.spectre',
+  require 'custom.plugins.splitjoin',
+  -- require 'custom.plugins.nvim-dap-virtual-text',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-  require 'custom.plugins.supermaven',
+  -- require 'custom.plugins.supermaven',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -562,3 +565,41 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 require 'custom.commands'
 --
+vim.diagnostic.config {
+  virtual_text = true,
+  virtual_lines = { current_line = true },
+  underline = true,
+  update_in_insert = false,
+}
+
+local og_virt_text
+local og_virt_line
+vim.api.nvim_create_autocmd({ 'CursorMoved', 'DiagnosticChanged' }, {
+  group = vim.api.nvim_create_augroup('diagnostic_only_virtlines', {}),
+  callback = function()
+    if og_virt_line == nil then
+      og_virt_line = vim.diagnostic.config().virtual_lines
+    end
+
+    -- ignore if virtual_lines.current_line is disabled
+    if not (og_virt_line and og_virt_line.current_line) then
+      if og_virt_text then
+        vim.diagnostic.config { virtual_text = og_virt_text }
+        og_virt_text = nil
+      end
+      return
+    end
+
+    if og_virt_text == nil then
+      og_virt_text = vim.diagnostic.config().virtual_text
+    end
+
+    local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
+
+    if vim.tbl_isempty(vim.diagnostic.get(0, { lnum = lnum })) then
+      vim.diagnostic.config { virtual_text = og_virt_text }
+    else
+      vim.diagnostic.config { virtual_text = false }
+    end
+  end,
+})

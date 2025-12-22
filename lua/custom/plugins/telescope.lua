@@ -131,13 +131,15 @@ return {
       local grepOpts = {
         additional_args = {},
       }
-      for k, v in pairs(opts.fargs) do
-        if k == 1 then
-          grepOpts.search = v
-        else
-          table.insert(grepOpts.additional_args, '--glob=' .. v)
-        end
-      end
+      -- for k, v in pairs(opts.fargs) do
+      --   if k == 1 then
+      --     grepOpts.search = v
+      --   else
+      --     table.insert(grepOpts.additional_args, '--glob=' .. v)
+      --   end
+      -- end
+      grepOpts.search = opts.args
+      -- print(vim.inspect(grepOpts))
       builtin.grep_string(grepOpts)
     end, { nargs = '*' })
     vim.api.nvim_create_user_command('Rge', function(opts)
@@ -145,13 +147,15 @@ return {
         use_regex = true,
         additional_args = {},
       }
-      for k, v in pairs(opts.fargs) do
-        if k == 1 then
-          grepOpts.search = v
-        else
-          table.insert(grepOpts.additional_args, '--glob=' .. v)
-        end
-      end
+      -- for k, v in pairs(opts.fargs) do
+      --   if k == 1 then
+      --     grepOpts.search = v
+      --   else
+      --     table.insert(grepOpts.additional_args, '--glob=' .. v)
+      --   end
+      -- end
+
+      grepOpts.search = opts.args
       builtin.grep_string(grepOpts)
     end, { nargs = '*' })
     vim.api.nvim_create_user_command('Rgde', function(opts)
