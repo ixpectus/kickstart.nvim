@@ -16,5 +16,12 @@ return {
       end,
       desc = 'Split the object under cursor',
     },
+    {
+      'gs',
+      function()
+        require('splitjoin').split()
+      end,
+      desc = 'Split the object under cursor',
+    },
   },
 }
