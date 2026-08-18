@@ -233,6 +233,7 @@ command! -nargs=* CmdRunTest call CmdRunTest(<f-args>)
 command! -nargs=* CmdRunLastTest call CmdRunLastTest(<f-args>)
 command! -nargs=* CmdRunTableTest call CmdRunTableTest(<f-args>)
 command! -nargs=* Markmap call RunMarkmap(<f-args>)
+command! -range SendSelectionToAgent <line1>,<line2>lua require('custom.functions').SendSelectionToAgent(<line1>, <line2>)
 
 
 nmap <Leader>ft :CmdRunTest<Cr>
