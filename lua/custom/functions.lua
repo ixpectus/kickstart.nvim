@@ -24,13 +24,39 @@ if f then
   end
 end
 
---- Clear the persistent prompt log file.
+--- Get the path to the prompt log archive file.
+function GetPromptArchivePath()
+  return vim.fn.stdpath 'data' .. '/prompts_archive.log'
+end
+
+--- Clear the persistent prompt log file, archiving its contents first.
 function ClearPromptLog()
-  local f = io.open(GetPromptLogPath(), 'w')
-  if f then
-    f:close()
+  local log_path = GetPromptLogPath()
+  local archive_path = GetPromptArchivePath()
+
+  -- Read current log content.
+  local content = vim.fn.readfile(log_path)
+
+  -- Append to archive.
+  if #content > 0 then
+    local archive_f = io.open(archive_path, 'a')
+    if archive_f then
+      for _, line in ipairs(content) do
+        archive_f:write(line .. '\n')
+      end
+      archive_f:close()
+    else
+      vim.notify('Failed to write to prompt archive', vim.log.levels.ERROR)
+      return
+    end
   end
-  vim.notify('Prompt log cleared', vim.log.levels.INFO)
+
+  -- Truncate the log file.
+  local log_f = io.open(log_path, 'w')
+  if log_f then
+    log_f:close()
+  end
+  vim.notify('Prompt log cleared (archived)', vim.log.levels.INFO)
 end
 
 function GetProjectRoot()
@@ -110,4 +136,5 @@ return {
   SendSelectionToAgent = SendSelectionToAgent,
   ClearPromptLog = ClearPromptLog,
   GetPromptLogPath = GetPromptLogPath,
+  GetPromptArchivePath = GetPromptArchivePath,
 }

@@ -73,7 +73,7 @@ end, { nargs = 0, desc = 'Send selection to agent and log prompt' })
 
 vim.api.nvim_create_user_command('PromptClear', function()
   require('custom.functions').ClearPromptLog()
-end, { desc = 'Clear the prompt log file' })
+end, { desc = 'Clear the prompt log file (archived)' })
 
 vim.api.nvim_create_user_command('PromptShow', function(opts)
   local n = tonumber(opts.args) or 50
@@ -131,3 +131,9 @@ vim.api.nvim_create_user_command('PromptOpen', function()
   local path = require('custom.functions').GetPromptLogPath()
   vim.cmd('edit ' .. path)
 end, { desc = 'Open the prompt log file in a new buffer' })
+
+vim.api.nvim_create_user_command('PromptArchiveShow', function()
+  local archive_path = require('custom.functions').GetPromptArchivePath()
+  local lines = vim.fn.readfile(archive_path)
+  OpenTemporaryBuffer(lines)
+end, { desc = 'Show the full prompt archive in a scratch buffer' })
