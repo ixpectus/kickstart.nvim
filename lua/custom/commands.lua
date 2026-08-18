@@ -5,13 +5,9 @@ local conf = require('telescope.config').values
 local action_state = require 'telescope.actions.state'
 
 function GetCommands()
-  local filterGo = function()
-    return vim.bo.filetype == 'go'
-  end
-  local filterLua = function()
-    return vim.bo.filetype == 'lua'
-  end
   local commands = {
+    { 'open prompts file', ':PromptOpen' },
+    { 'clear prompts file', ':PromptClear' },
     { 'pg pro repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/pg_pro"}}' },
     { 'mine projects', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/projects"}}' },
     { 'nvim plugin repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/.local/share/kickstart.nvim/lazy/"}}' },
@@ -62,3 +58,38 @@ local map = vim.api.nvim_set_keymap
 
 local default_opts = { noremap = true, silent = true }
 map('n', '<C-c>', [[<cmd>lua CustomCommands(require("telescope.themes").get_dropdown{commands = GetCommands()}):find()<cr>]], default_opts)
+
+-- Prompt log commands.
+vim.api.nvim_create_user_command('PromptLog', function(opts)
+  require('custom.functions').SendSelectionToAgent()
+end, { nargs = 0, desc = 'Send selection to agent and log prompt' })
+
+vim.api.nvim_create_user_command('PromptClear', function()
+  require('custom.functions').ClearPromptLog()
+end, { desc = 'Clear the prompt log file' })
+
+vim.api.nvim_create_user_command('PromptShow', function(opts)
+  local n = tonumber(opts.args) or 50
+  local log_path = require('custom.functions').GetPromptLogPath()
+  local lines = vim.fn.readfile(log_path)
+  table.remove(lines, 1, math.max(1, #lines - n))
+
+  -- Create a scratch buffer with the last N log entries.
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_name(buf, '[PromptShow]')
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+  -- Read-only.
+  vim.bo[buf].buftype = 'nofile'
+  vim.bo[buf].bufhidden = 'wipe'
+  vim.bo[buf].modifiable = false
+
+  -- Close with <q> or <Esc>.
+  vim.keymap.set('n', '<Esc>', '<cmd>bd<CR>', { buffer = buf, silent = true })
+  vim.keymap.set('n', 'q', '<cmd>bd<CR>', { buffer = buf, silent = true })
+end, { nargs = '?', desc = 'Show last N prompt log entries in a scratch buffer' })
+
+vim.api.nvim_create_user_command('PromptOpen', function()
+  local path = require('custom.functions').GetPromptLogPath()
+  vim.cmd('edit ' .. path)
+end, { desc = 'Open the prompt log file in a new buffer' })

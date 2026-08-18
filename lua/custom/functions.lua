@@ -1,3 +1,38 @@
+--- Get the path to the persistent prompt log file.
+function GetPromptLogPath()
+  return vim.fn.stdpath 'data' .. '/prompts.log'
+end
+
+--- Append a prompt entry to the persistent log file.
+local function LogPromptToFile(fname, from, to, selected_text, prompt)
+  local timestamp = vim.fn.strftime '%Y-%m-%d %H:%M:%S'
+  local entry = string.format(
+    '--- [%s] ---\nFile: %s\nLines: %d-%d\n\n%s\n\nPrompt: %s\n\n',
+    timestamp,
+    fname,
+    from,
+    to,
+    selected_text,
+    prompt
+  )
+  local f = io.open(GetPromptLogPath(), 'a')
+if f then
+    f:write(entry)
+    f:close()
+  else
+    vim.notify('Failed to write to prompt log', vim.log.levels.ERROR)
+  end
+end
+
+--- Clear the persistent prompt log file.
+function ClearPromptLog()
+  local f = io.open(GetPromptLogPath(), 'w')
+  if f then
+    f:close()
+  end
+  vim.notify('Prompt log cleared', vim.log.levels.INFO)
+end
+
 function GetProjectRoot()
   local root = vim.fn.finddir(('.git' .. '/..'), (vim.fn.expand '%:p:h' .. ';'))
   if root then
@@ -29,7 +64,6 @@ function SendSelectionToAgent(from, to)
   end
 
   local fname = vim.fn.expand '%:p'
-  local filetype = vim.bo.filetype or 'text'
 
   -- Build the text block (with line numbers).
   local lines = {}
@@ -51,7 +85,6 @@ function SendSelectionToAgent(from, to)
   local payload = string.format(
     [[File: %s
 Lines: %d-%d
-Type: %s
 
 %s
 
@@ -59,13 +92,15 @@ Prompt: %s]],
     fname,
     from,
     to,
-    filetype,
     selected_text,
     prompt
   )
 
-  -- Save to the system clipboard (+ register).
+-- Save to the system clipboard (+ register).
   vim.fn.setreg('+', payload)
+
+  -- Log to persistent file.
+  LogPromptToFile(fname, from, to, selected_text, prompt)
 
   -- vim.notify(string.format('Sent %d:%d of %s to clipboard.', from, to, fname), vim.log.levels.INFO)
 end
@@ -73,4 +108,6 @@ end
 return {
   GetProjectRoot = GetProjectRoot,
   SendSelectionToAgent = SendSelectionToAgent,
+  ClearPromptLog = ClearPromptLog,
+  GetPromptLogPath = GetPromptLogPath,
 }
