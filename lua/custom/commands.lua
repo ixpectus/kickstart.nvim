@@ -59,7 +59,12 @@ local map = vim.api.nvim_set_keymap
 local default_opts = { noremap = true, silent = true }
 map('n', '<C-c>', [[<cmd>lua CustomCommands(require("telescope.themes").get_dropdown{commands = GetCommands()}):find()<cr>]], default_opts)
 map('n', '<leader>s', [[<cmd>SendSelectionToAgent<cr>]], default_opts)
-map('v', '<leader>s', [[<Cmd>lua require('custom.functions').SendSelectionToAgent(vim.api.nvim_buf_get_mark(0, '<')[1], vim.api.nvim_buf_get_mark(0, '>')[1])<CR>]], default_opts)
+map(
+  'v',
+  '<leader>s',
+  [[<Cmd>lua require('custom.functions').SendSelectionToAgent(vim.api.nvim_buf_get_mark(0, '<')[1], vim.api.nvim_buf_get_mark(0, '>')[1])<CR>]],
+  default_opts
+)
 
 -- Prompt log commands.
 vim.api.nvim_create_user_command('PromptLog', function(opts)
@@ -102,10 +107,14 @@ vim.api.nvim_create_user_command('PromptShow', function(opts)
     end
   end
 
+  OpenTemporaryBuffer(result)
+end, { nargs = '?', desc = 'Show last N prompt log entries in a scratch buffer' })
+
+local function OpenTemporaryBuffer(lines)
   local buf = vim.api.nvim_create_buf(false, false)
   vim.api.nvim_set_current_buf(buf)
   vim.api.nvim_buf_set_name(buf, '[PromptShow]')
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, result)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
   -- Read-only.
   vim.bo[buf].buftype = 'nofile'
@@ -115,7 +124,8 @@ vim.api.nvim_create_user_command('PromptShow', function(opts)
   -- Close with <q> or <Esc>.
   vim.keymap.set('n', '<Esc>', '<cmd>bd<CR>', { buffer = buf, silent = true })
   vim.keymap.set('n', 'q', '<cmd>bd<CR>', { buffer = buf, silent = true })
-end, { nargs = '?', desc = 'Show last N prompt log entries in a scratch buffer' })
+  return buf
+end
 
 vim.api.nvim_create_user_command('PromptOpen', function()
   local path = require('custom.functions').GetPromptLogPath()
