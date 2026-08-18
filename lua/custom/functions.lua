@@ -1,64 +1,6 @@
---- Get the path to the persistent prompt log file.
-function GetPromptLogPath()
-  return vim.fn.stdpath 'data' .. '/prompts.log'
-end
+local ai_prompt = require 'custom.ai_prompt'
 
---- Append a prompt entry to the persistent log file.
-local function LogPromptToFile(fname, from, to, selected_text, prompt)
-  local timestamp = vim.fn.strftime '%Y-%m-%d %H:%M:%S'
-  local entry = string.format(
-    '--- [%s] ---\nFile: %s\nLines: %d-%d\n\n%s\n\nPrompt: %s\n\n',
-    timestamp,
-    fname,
-    from,
-    to,
-    selected_text,
-    prompt
-  )
-  local f = io.open(GetPromptLogPath(), 'a')
-if f then
-    f:write(entry)
-    f:close()
-  else
-    vim.notify('Failed to write to prompt log', vim.log.levels.ERROR)
-  end
-end
-
---- Get the path to the prompt log archive file.
-function GetPromptArchivePath()
-  return vim.fn.stdpath 'data' .. '/prompts_archive.log'
-end
-
---- Clear the persistent prompt log file, archiving its contents first.
-function ClearPromptLog()
-  local log_path = GetPromptLogPath()
-  local archive_path = GetPromptArchivePath()
-
-  -- Read current log content.
-  local content = vim.fn.readfile(log_path)
-
-  -- Append to archive.
-  if #content > 0 then
-    local archive_f = io.open(archive_path, 'a')
-    if archive_f then
-      for _, line in ipairs(content) do
-        archive_f:write(line .. '\n')
-      end
-      archive_f:close()
-    else
-      vim.notify('Failed to write to prompt archive', vim.log.levels.ERROR)
-      return
-    end
-  end
-
-  -- Truncate the log file.
-  local log_f = io.open(log_path, 'w')
-  if log_f then
-    log_f:close()
-  end
-  vim.notify('Prompt log cleared (archived)', vim.log.levels.INFO)
-end
-
+--- Get the project root directory.
 function GetProjectRoot()
   local root = vim.fn.finddir(('.git' .. '/..'), (vim.fn.expand '%:p:h' .. ';'))
   if root then
@@ -67,74 +9,20 @@ function GetProjectRoot()
   return vim.fn.expand '%:p:h'
 end
 
---- Sends the current visual selection (with line numbers) and a user-provided
---- prompt to the system clipboard so it can be forwarded to any AI agent.
----
---- Usage in Neovim:
----   :SendSelectionToAgent
----
---- Or from another Lua module / keymap:
----   require('custom.functions').SendSelectionToAgent()
+--- Wrapper: send visual selection to agent (delegates to ai_prompt).
+--- @see custom.ai_prompt.SendSelectionToAgent
 function SendSelectionToAgent(from, to)
-  -- Accept range from the Ex command; fall back to marks for direct Lua calls.
-  from = from or vim.fn.line "'<"
-  to = to or vim.fn.line "'>"
-  if from == 0 then
-    from = 1
-  end
-  if to == 0 then
-    to = vim.fn.line '$'
-  end
-  if from > to then
-    from, to = to, from
-  end
+  return ai_prompt.SendSelectionToAgent(from, to)
+end
 
-  local fname = vim.fn.expand '%:p'
-
-  -- Build the text block (with line numbers).
-  local lines = {}
-  for i = from, to do
-    local txt = vim.fn.getline(i)
-    table.insert(lines, string.format('%d: %s', i, txt))
-  end
-
-  local selected_text = table.concat(lines, '\n')
-
-  -- Prompt the user for an instruction / prompt.
-  local prompt = vim.fn.input('Prompt: ', '')
-  if prompt == '' then
-    vim.notify('SendSelectionToAgent: empty prompt cancelled', vim.log.levels.INFO)
-    return
-  end
-
-  -- Compose the full payload.
-  local payload = string.format(
-    [[File: %s
-Lines: %d-%d
-
-%s
-
-Prompt: %s]],
-    fname,
-    from,
-    to,
-    selected_text,
-    prompt
-  )
-
--- Save to the system clipboard (+ register).
-  vim.fn.setreg('+', payload)
-
-  -- Log to persistent file.
-  LogPromptToFile(fname, from, to, selected_text, prompt)
-
-  -- vim.notify(string.format('Sent %d:%d of %s to clipboard.', from, to, fname), vim.log.levels.INFO)
+--- Wrapper: clear the prompt log (delegates to ai_prompt).
+--- @see custom.ai_prompt.ClearPromptLog
+function ClearPromptLog()
+  return ai_prompt.ClearPromptLog()
 end
 
 return {
   GetProjectRoot = GetProjectRoot,
   SendSelectionToAgent = SendSelectionToAgent,
   ClearPromptLog = ClearPromptLog,
-  GetPromptLogPath = GetPromptLogPath,
-  GetPromptArchivePath = GetPromptArchivePath,
 }

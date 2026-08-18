@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Анализ сессии 01a01551 — Конкретный план изучения</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #c8ccd4;
+    --text-dim: #7f8494;
+    --accent: #6c8cff;
+    --accent2: #5eead4;
+    --warn: #f59e0b;
+    --red: #f87171;
+    --green: #34d399;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+    --orange: #fb923c;
+    --teal: #2dd4bf;
+    --code-bg: #161822;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  header {
+    text-align: center;
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  header h1 {
+    font-size: 1.4rem;
+    color: #fff;
+    font-weight: 600;
+  }
+  header .subtitle {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-top: 8px;
+  }
+  header .meta {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    margin-top: 10px;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat .num { font-size: 2rem; font-weight: 700; color: #fff; }
+  .stat .label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+  .intro {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 40px;
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+  .intro h3 { color: #fff; font-size: 1rem; margin-bottom: 12px; }
+  .intro p { margin-bottom: 8px; }
+
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .step::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+  }
+  .step-1::before { background: var(--accent); }
+  .step-2::before { background: var(--accent2); }
+  .step-3::before { background: var(--purple); }
+  .step-4::before { background: var(--pink); }
+  .step-5::before { background: var(--orange); }
+  .step-6::before { background: var(--teal); }
+
+  .step-number {
+    display: inline-block;
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    letter-spacing: 0.06em;
+  }
+  .step h2 {
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .step .step-desc {
+    font-size: 0.78rem;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-block .file-ref {
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .code-block code {
+    color: var(--text);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  .code-block .hl { color: #fff; font-weight: 600; }
+  .code-block .comment { color: #4a5068; }
+  .code-block .string { color: var(--green); }
+  .code-block .keyword { color: var(--purple); }
+  .code-block .func { color: var(--accent); }
+  .code-block .type { color: var(--accent2); }
+
+  .explanation {
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+  .explanation .q { color: var(--text-dim); font-style: italic; margin-bottom: 6px; }
+  .explanation .a { color: var(--text); }
+  .explanation .a strong { color: #fff; }
+
+  .task-list {
+    list-style: none;
+    margin-top: 14px;
+  }
+  .task-list li {
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    background: var(--surface2);
+    border-radius: 6px;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    border-left: 2px solid var(--border);
+  }
+  .task-list li .task-num {
+    color: var(--text-dim);
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .task-list li .task-text { color: var(--text); }
+  .task-list li .task-text strong { color: #fff; }
+  .task-list li .task-text code {
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.72rem;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .tag-high { background: rgba(248,113,113,0.2); color: var(--red); }
+  .tag-medium { background: rgba(245,158,11,0.2); color: var(--warn); }
+  .tag-low { background: rgba(52,211,153,0.2); color: var(--green); }
+
+  .footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    padding: 40px 0 0;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Анализ сессии 01a01551 — Конкретный план изучения</h1>
+  <div class="subtitle">Каждый вопрос привязан к строкам вашего кода. Никакой абстракции — только то, что вы трогали.</div>
+  <div class="meta">kickstart.nvim · 18 августа 2026 · 52 вопроса · 2 файла</div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">52</div><div class="label">вопроса</div></div>
+  <div class="stat"><div class="num">6</div><div class="label">шагов</div></div>
+  <div class="stat"><div class="num">2</div><div class="label">файла</div></div>
+  <div class="stat"><div class="num">1</div><div class="label">час в день</div></div>
+</div>
+
+<div class="intro">
+  <h3>Как читать этот план</h3>
+  <p>
+    Вы не будете писать код руками. Ваш формат: <strong>читать существующий код → задавать вопросы → получать объяснение</strong>. Этот план — список тем, которые нужно проработать в таком формате, привязанный к <strong>конкретным строкам</strong> вашего кода.
+  </p>
+  <p>
+    Каждый шаг — это тема. Внутри: исходный код (ваш, реальный), ваши вопросы (то, что вы спрашивали), и что конкретно нужно понять. Порядок — от фундамента к специфике.
+  </p>
+  <p>
+    <strong>Рекомендуемый темп:</strong> 1 шаг в день, по 30–60 минут. Читаете код, задаёте вопросы, закрепляете на практике (вызов команды → наблюдение результата).
+  </p>
+</div>
+
+<!-- STEP 1 -->
+<div class="step step-1">
+  <div class="step-number">ШАГ 1 ИЗ 6 · Фундамент Neovim API</div>
+  <h2>vim.fn, vim.api, vim.bo — кто есть кто</h2>
+  <div class="step-desc">
+    В сессии вы спросили: <em>"что такое vim.fn это типа неймспейса?"</em>, <em>"то есть line это функция в nvim?"</em>, <em>"а vim.bo это что"</em>, <em>"vim.api это уже новое api neovim, а не обёртка над апи vim?"</em>. Это базовые вопросы о том, как устроен Neovim изнутри. Без ответа на них любой код — чёрный ящик.
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">functions.lua, строки 2–3, 8, 63, 80–81, 92, 97, 104, 126</span>
+    <code>
+      <span class="comment">-- functions.lua: все вызовы vim.fn</span><br>
+      <span class="func">vim.fn</span>.stdpath <span class="string">'data'</span><br>
+      <span class="func">vim.fn</span>.strftime <span class="string">'%Y-%m-%d %H:%M:%S'</span><br>
+      <span class="func">vim.fn</span>.finddir(<span class="string">'.git'</span> .. <span class="string">'/..'</span>, ...)<br>
+      <span class="func">vim.fn</span>.line <span class="string">"'<"</span><br>
+      <span class="func">vim.fn</span>.line <span class="string">"'>'"</span><br>
+      <span class="func">vim.fn</span>.line <span class="string">'$'</span><br>
+      <span class="func">vim.fn</span>.expand <span class="string">'%:p'</span><br>
+      <span class="func">vim.fn</span>.getline(i)<br>
+      <span class="func">vim.fn</span>.input(<span class="string">'Prompt: '</span>, <span class="string">''</span>)<br>
+      <span class="func">vim.fn</span>.setreg(<span class="string"">'+'</span>, payload)
+    </code>
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">commands.lua, строки 57, 65, 70, 74, 78, 114–127</span>
+    <code>
+      <span class="comment">-- commands.lua: все вызовы vim.api</span><br>
+      <span class="func">vim.api</span>.nvim_set_keymap<br>
+      <span class="func">vim.api</span>.nvim_buf_get_mark(<span class="string">0</span>, <span class="string">'<'</span>)[<span class="string">1</span>]<br>
+      <span class="func">vim.api</span>.nvim_create_user_command(<span class="string">'PromptClear'</span>, ...)<br>
+      <span class="func">vim.api</span>.nvim_create_buf(<span class="keyword">false</span>, <span class="keyword">false</span>)<br>
+      <span class="func">vim.api</span>.nvim_set_current_buf(buf)<br>
+      <span class="func">vim.api</span>.nvim_buf_set_name(buf, <span class="string">'[PromptShow]'</span>)<br>
+      <span class="func">vim.api</span>.nvim_buf_set_lines(buf, <span class="string">0</span>, <span class="string">-1</span>, <span class="keyword">false</span>, lines)<br>
+      <span class="func">vim.bo</span>[buf].buftype = <span class="string">'nofile'</span><br>
+      <span class="func">vim.bo</span>[buf].bufhidden = <span class="string">'wipe'</span>
+    </code>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «что такое vim.fn это типа неймспейса?»</div>
+    <div class="a">
+      <strong>Нет, это не неймспейс.</strong> <code>vim.fn</code> — это таблица-обёртка, которая делает все встроенные Vimscript-функции доступными из Lua. <code>vim.fn.line()</code> вызывает Vimscript-функцию <code>line()</code>, обёрнутую в Lua-стиль. Это <strong>медленнее</strong> чем <code>vim.api</code>, потому что идёт сериализация данных между Lua и Vimscript.
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «vim.api это уже новое api neovim, а не обёртка над апи vim?»</div>
+    <div class="a">
+      <strong>Да.</strong> <code>vim.api.nvim_buf_set_lines()</code> — это прямой вызов C API Neovim из Lua. Без Vimscript, без сериализации. Быстрее, типобезопаснее. <code>vim.fn.getline()</code> — та же самая операция, но через Vimscript-слой (медленнее).
+    </div>
+  </div>
+
+  <ul class="task-list">
+    <li><span class="task-num">1.1</span> <span class="task-text"><strong>Выучить таблицу: какие <code>vim.*</code> таблицы существуют и что каждая делает.</strong> <code>vim.fn</code> (Vimscript-обёртка), <code>vim.api</code> (C-API), <code>vim.bo</code> (буферные опции), <code>vim.wo</code> (оконные опции), <code>vim.o</code> (глобальные опции), <code>vim.g</code> (глобальные переменные). Не запоминать наизусть — понять принцип: <code>vim.X</code> — это разные таблицы с разными назначениями.</span></li>
+    <li><span class="task-num">1.2</span> <span class="task-text"><strong>Понять разницу <code>vim.fn</code> vs <code>vim.api</code> на конкретном примере:</strong> <code>vim.fn.getline(1)</code> читает строку 1 через Vimscript (медленно), <code>vim.api.nvim_buf_get_lines(0, 0, 1, false)</code> читает ту же строку напрямую из C (быстро). В вашем коде на строке 97 используется <code>vim.fn.getline(i)</code> — это допустимо для редких вызовов, но для частого кода — <code>vim.api.nvim_buf_get_lines()</code>.</span></li>
+    <li><span class="task-num">1.3</span> <span class="task-text"><strong>Понять <code>vim.bo[buf].buftype</code> и <code>vim.bo[buf].bufhidden</code>:</strong> <code>buftype</code> определяет тип буфера (<code>''</code> = обычный, <code>'nofile'</code> = служебный, <code>'quickfix'</code> = быстрый). <code>bufhidden</code> определяет, что происходит при переключении (<code>''</code> = скрыть, <code>'wipe'</code> = удалить, <code>'hide'</code> = оставить в памяти). На строке 120–121 вы устанавливаете <code>buftype='nofile'</code> и <code>bufhidden='wipe'</code> — это делает буфер невидимым в <code>:ls</code> и автоматически удаляет при закрытии.</span></li>
+  </ul>
+</div>
+
+<!-- STEP 2 -->
+<div class="step step-2">
+  <div class="step-number">ШАГ 2 ИЗ 6 · Lua-синтаксис: то, что вы трогали</div>
+  <h2>Оператор #, многострочные строки, таблицы, параметры</h2>
+  <div class="step-desc">
+    В сессии: <em>"что делает #chunks"</em>, <em>"что значат тут [["</em>, <em>"их используют в основном для того, чтобы не экранировать кавычки?"</em>, <em>"почему аргументы false, true"</em>, <em>"последовательность это массив или нет?"</em>. Это не абстрактный Lua — это конкретные конструкции из вашего кода.
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">functions.lua, строки 41, 96–98, 101, 111–117</span>
+    <code>
+      <span class="comment">-- #content на строке 41</span><br>
+      <span class="keyword">if</span> <span class="func">#</span>content > <span class="string">0</span> <span class="keyword">then</span><br>
+<br>
+      <span class="comment">-- #chunks на строке 101 (commands.lua)</span><br>
+      <span class="keyword">local</span> total = <span class="func">#</span>chunks<br>
+<br>
+      <span class="comment">-- многострочная строка [[...]] на строках 111–117</span><br>
+      <span class="keyword">local</span> payload = <span class="func">string.format</span>(<br>
+        <span class="string">[[File: %s</span><br>
+      <span class="string">Lines: %d-%d</span><br>
+      <span class="string">...</span><br>
+      <span class="string">]]</span>, ...)<br>
+<br>
+      <span class="comment">-- table.insert на строке 98</span><br>
+      <span class="func">table.insert</span>(lines, <span class="func">string.format</span>(<span class="string">'%d: %s'</span>, i, txt))<br>
+      <span class="keyword">local</span> selected_text = <span class="func">table.concat</span>(lines, <span class="string">'\n'</span>)
+    </code>
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">commands.lua, строки 114, 117</span>
+    <code>
+      <span class="comment">-- nvim_create_buf(false, false) — на строке 114</span><br>
+      <span class="comment">-- первые false = не буферизированный, второй false = не в списке</span><br>
+      <span class="keyword">local</span> buf = <span class="func">vim.api</span>.nvim_create_buf(<span class="keyword">false</span>, <span class="keyword">false</span>)<br>
+<br>
+      <span class="comment">-- nvim_buf_set_lines(buf, 0, -1, false, lines)</span><br>
+      <span class="comment">-- 0 = первая строка, -1 = последняя, false = strict, lines = массив строк</span><br>
+      <span class="func">vim.api</span>.nvim_buf_set_lines(buf, <span class="string">0</span>, <span class="string">-1</span>, <span class="keyword">false</span>, lines)
+    </code>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «что делает #chunks, что это за синтаксис»</div>
+    <div class="a">
+      <code>#chunks</code> — это <strong>оператор длины таблицы</strong> в Lua. Для массива (последовательности с индексами 1, 2, 3...) <code>#chunks</code> возвращает количество элементов. На строке 101 <code>commands.lua</code> <code>#chunks</code> возвращает количество чанков (групп строк). Это не «синтаксис» — это встроенный оператор Lua, как <code>+</code> или <code>-</code>.
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «что значат тут [[», «их используют в основном для того, чтобы не экранировать кавычки?»</div>
+    <div class="a">
+      <code>[[...]]</code> — это <strong>многострочная строка</strong> в Lua. Она позволяет писать текст с переносами, кавычками, процентами без экранирования. <strong>Основная ценность</strong> — не только кавычки, а возможность писать многострочные строки (шаблоны, SQL-запросы, HTML, форматы). В вашем коде на строках 111–117 <code>functions.lua</code> она используется для создания формата с переносами строк.
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «почему аргументы false, true», «почему тут такие параметры»</div>
+    <div class="a">
+      <code>nvim_create_buf(false, false)</code> — первый <code>false</code> = <code>modifiable</code> (можно ли редактировать), второй <code>false</code> = <code>buflisted</code> (показывать ли в <code>:ls</code>). <code>nvim_buf_set_lines(buf, 0, -1, false, lines)</code> — <code>0</code> = от первой строки, <code>-1</code> = до последней, <code>false</code> = не строгий режим (не ошибка при выходе за границы), <code>lines</code> = массив строк для вставки.
+    </div>
+  </div>
+
+  <ul class="task-list">
+    <li><span class="task-num">2.1</span> <span class="task-text"><strong>Оператор <code>#</code> в Lua:</strong> что возвращает для массивов, строк, смешанных таблиц. Почему <code>#content</code> на строке 41 <code>functions.lua</code> работает (проверка "есть ли запись в лог"), а <code>#chunks</code> на строке 101 <code>commands.lua</code> — количество чанков. Практика: прочитать код с <code>#</code> и предсказать, что вернётся.</span></li>
+    <li><span class="task-num">2.2</span> <span class="task-text"><strong>Многострочные строки <code>[[...]]</code>:</strong> когда использовать вместо <code>'...'</code>. На строках 111–117 <code>functions.lua</code> — многострочный шаблон для payload. На строках 62–66 <code>commands.lua</code> — многострочный mapping. Различать <code>[[...]]</code> (базовый) и <code>[=[...]=]</code> (вложенные скобки).</span></li>
+    <li><span class="task-num">2.3</span> <span class="task-text"><strong>Параметры функций Neovim API:</strong> <code>nvim_create_buf(modifiable, buflisted)</code>, <code>nvim_buf_set_lines(buf, start, end, strict, lines)</code>, <code>nvim_buf_get_mark(buf, mark)</code>. Знать порядок и смысл каждого параметра — не угадывать.</span></li>
+    <li><span class="task-num">2.4</span> <span class="task-text"><strong>Таблицы в Lua (ipairs vs pairs, table.insert, table.concat):</strong> <code>table.insert(lines, ...)</code> на строке 98 <code>functions.lua</code> — добавление в массив. <code>table.concat(lines, '\n')</code> на строке 101 — объединение массива в строку. <code>ipairs</code> vs <code>pairs</code> на строке 19 <code>commands.lua</code>.</span></li>
+  </ul>
+</div>
+
+<!-- STEP 3 -->
+<div class="step step-3">
+  <div class="step-number">ШАГ 3 ИЗ 6 · Marks и визуальные режимы</div>
+  <h2>'<', '>', nvim_buf_get_mark и vim.fn.line</h2>
+  <div class="step-desc">
+    В сессии: <em>"vim.fn.line это функция, которая принимает аргумент '<'?"</em>, <em>"что значит после выхода из визуального режима, в какой момент это происходит?"</em>, <em>"получается при leader s я теперь не выхожу из визуального режима?"</em>, <em>"почему не сработал вариант с fn.line"</em>. Это критически важная тема — непонимание приводит к багам «отправляется одна строка вместо диапазона».
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">functions.lua, строки 80–81, 86; commands.lua, строка 65</span>
+    <code>
+      <span class="comment">-- Фоллбек на marks (functions.lua, строки 80–81)</span><br>
+      from = from <span class="keyword">or</span> <span class="func">vim.fn</span>.line <span class="string">"'<"</span><br>
+      to = to <span class="keyword">or</span> <span class="func">vim.fn</span>.line <span class="string">"'>'"</span><br>
+<br>
+      <span class="comment">-- Если marks = 0 (вне визуального режима), fallback (строка 86)</span><br>
+      <span class="keyword">if</span> to == <span class="string">0</span> <span class="keyword">then</span><br>
+        to = <span class="func">vim.fn</span>.line <span class="string">'$'</span><br>
+      <span class="keyword">end</span><br>
+<br>
+      <span class="comment">-- Прямой вызов из visual-mapping (commands.lua, строка 65)</span><br>
+      <span class="func">vim.api</span>.nvim_buf_get_mark(<span class="string">0</span>, <span class="string">'<'</span>)[<span class="string">1</span>],<br>
+      <span class="func">vim.api</span>.nvim_buf_get_mark(<span class="string">0</span>, <span class="string">'>'</span>)[<span class="string">1</span>]
+    </code>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «vim.fn.line это функция, которая принимает аргумент '<'?»</div>
+    <div class="a">
+      <code>vim.fn.line("'&lt;")</code> — да, принимает строковый аргумент. <code>'&lt;</code> и <code>'&gt;</code> — это <strong>marks</strong>, которые Neovim автоматически устанавливает при выходе из визуального режима. <code>vim.fn.line("'&lt;")</code> возвращает номер строки начала выделения. Но! Если вы НЕ в визуальном режиме — <code>vim.fn.line("'&lt;")</code> вернёт <code>0</code>.
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «получается при leader s я теперь не выхожу из визуального режима?»</div>
+    <div class="a">
+      Нет, <strong>всегда выходите</strong>. <code>&lt;Cmd&gt;...</code> на строке 65 <code>commands.lua</code> — это Ex-команда, которая автоматически завершает визуальное выделение перед выполнением. <code>&lt;cmd&gt;...</code> (строчные) — тоже. Разница в том, что <code>noremap</code> на строке 59 <code>commands.lua</code> означает "не обрабатывать маппинги внутри" — это не про выход из режима.
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «почему не сработал вариант с fn.line»</div>
+    <div class="a">
+      Потому что <code>vim.fn.line("'&lt;")</code> возвращает <code>0</code> вне визуального режима. На строке 82–83 <code>functions.lua</code> — обработка: <code>if from == 0 then from = 1</code>. Но <code>nvim_buf_get_mark()</code> на строке 65 <code>commands.lua</code> — более надёжный способ: он работает даже если marks ещё не установлены (тоже вернёт <code>{0, 0}</code>, но с более явной обработкой).
+    </div>
+  </div>
+
+  <ul class="task-list">
+    <li><span class="task-num">3.1</span> <span class="task-text"><strong>Marks <code>'&lt;</code> и <code>'&gt;</code>:</strong> когда Neovim их устанавливает (при выходе из визуального режима), что возвращает <code>vim.fn.line("'&lt;")</code> вне визуального режима (<code>0</code>), как работает <code>nvim_buf_get_mark(0, "'&lt;")</code> (возвращает <code>{row, col}</code>), почему на строке 65 <code>commands.lua</code> используется <code>[1]</code> для извлечения row.</span></li>
+    <li><span class="task-num">3.2</span> <span class="task-text"><strong>Разница <code>vim.fn.line("'&lt;")</code> vs <code>vim.api.nvim_buf_get_mark(0, "'&lt;")</code>:</strong> первый — через Vimscript-слой (медленнее, возвращает число), второй — через C API (быстрее, возвращает таблицу <code>{row, col}</code>). Когда какой использовать (строки 80–81 vs строка 65).</span></li>
+    <li><span class="task-num">3.3</span> <span class="task-text"><strong>Visual-mapping vs Normal-mapping:</strong> <code>map('v', ...)</code> на строках 63–67 <code>commands.lua</code> — работает только в визуальном режиме. <code>map('n', ...)</code> на строке 61 — только в нормальном. Почему <code>&lt;Cmd&gt;</code> завершает визуальное выделение, а <code>noremap</code> — нет.</span></li>
+  </ul>
+</div>
+
+<!-- STEP 4 -->
+<div class="step step-4">
+  <div class="step-number">ШАГ 4 ИЗ 6 · Жизненный цикл буфера</div>
+  <h2>nvim_create_buf, buflisted, buftype, bufhidden, :bd</h2>
+  <div class="step-desc">
+    В сессии: <em>"буффер не открывается"</em>, <em>"потестировал, буффера нет в :ls"</em>, <em>"какие есть опции у bufhidden"</em>, <em>"что такое bd"</em>. Вы создаёте временный буфер на строках 114–127 <code>commands.lua</code>, но не понимаете, почему он не виден в <code>:ls</code>.
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">commands.lua, строки 113–128</span>
+    <code>
+      <span class="keyword">local function</span> <span class="func">OpenTemporaryBuffer</span>(lines)<br>
+        <span class="keyword">local</span> buf = <span class="func">vim.api</span>.nvim_create_buf(<span class="keyword">false</span>, <span class="keyword">false</span>)<br>
+        <span class="comment">--       ^modifiable=false   ^buflisted=false</span><br>
+        <span class="func">vim.api</span>.nvim_set_current_buf(buf)<br>
+        <span class="func">vim.api</span>.nvim_buf_set_name(buf, <span class="string">'[PromptShow]'</span>)<br>
+        <span class="func">vim.api</span>.nvim_buf_set_lines(buf, <span class="string">0</span>, <span class="string">-1</span>, <span class="keyword">false</span>, lines)<br>
+<br>
+        <span class="func">vim.bo</span>[buf].buftype = <span class="string">'nofile'</span><br>
+        <span class="func">vim.bo</span>[buf].bufhidden = <span class="string">'wipe'</span><br>
+        <span class="func">vim.bo</span>[buf].modifiable = <span class="keyword">false</span><br>
+<br>
+        <span class="func">vim.keymap</span>.set(<span class="string">'n'</span>, <span class="string">'<Esc>'</span>, <span class="string">'<cmd>bd<CR>'</span>, { buffer = buf, silent = <span class="keyword">true</span> })<br>
+        <span class="func">vim.keymap</span>.set(<span class="string">'n'</span>, <span class="string">'q'</span>, <span class="string">'<cmd>bd<CR>'</span>, { buffer = buf, silent = <span class="keyword">true</span> })<br>
+        <span class="keyword">return</span> buf<br>
+      <span class="keyword">end</span>
+    </code>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «потестировал, буффера нет в :ls»</div>
+    <div class="a">
+      Потому что на строке 114 <code>nvim_create_buf(false, false)</code> — второй <code>false</code> означает <code>buflisted = false</code>. Буфер не появится в <code>:ls</code>. Это намеренное поведение: вы создаёте <strong>служебный</strong> буфер, который не должен мешать. Если хотите видеть — <code>nvim_create_buf(false, true)</code>.
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «какие есть опции у bufhidden», «что такое bd»</div>
+    <div class="a">
+      <code>bufhidden</code> — что происходит при переключении на другой буфер: <code>''</code> (скрыть, оставить в памяти), <code>'hide'</code> (то же), <code>'wipe'</code> (удалить полностью), <code>'unload'</code> (выгрузить, но оставить), <code>'swapfile'</code> (сохранить swap). <code>:bd</code> (buffer delete) — команда удаления буфера. На строках 125–126 <code>bd</code> привязан к <code>q</code> и <code>&lt;Esc&gt;</code>.
+    </div>
+  </div>
+
+  <ul class="task-list">
+    <li><span class="task-num">4.1</span> <span class="task-text"><strong>Полный жизненный цикл временного буфера:</strong> <code>nvim_create_buf(false, false)</code> → <code>nvim_buf_set_name()</code> → <code>nvim_buf_set_lines()</code> → <code>vim.bo[buf].buftype = 'nofile'</code> → <code>vim.bo[buf].bufhidden = 'wipe'</code> → <code>vim.keymap.set()</code> → <code>bd</code>. Понимать каждый шаг: что делает, почему именно так.</span></li>
+    <li><span class="task-num">4.2</span> <span class="task-text"><strong>Значения <code>buflisted</code>:</strong> <code>true</code> = буфер виден в <code>:ls</code>, <code>false</code> = скрыт. Когда использовать каждый. На строке 114 <code>commands.lua</code> — <code>false</code> намеренно.</span></li>
+    <li><span class="task-num">4.3</span> <span class="task-text"><strong>Значения <code>buftype</code>:</strong> <code>''</code> (обычный), <code>'nofile'</code> (без файла, служебный), <code>'quickfix'</code>, <code>'terminal'</code>. Почему <code>buftype='nofile'</code> на строке 120 делает буфель невидимым для <code>:edit</code> и <code>:next</code>.</span></li>
+    <li><span class="task-num">4.4</span> <span class="task-text"><strong>Значения <code>bufhidden</code>:</strong> <code>''</code>/'hide' (скрыть), <code>'wipe'</code> (удалить), <code>'unload'</code> (выгрузить), <code>'swapfile'</code>. Почему <code>'wipe'</code> на строке 121 — буфер удаляется при переключении, и почему это важно для временных буферов.</span></li>
+  </ul>
+</div>
+
+<!-- STEP 5 -->
+<div class="step step-5">
+  <div class="step-number">ШАГ 5 ИЗ 6 · Файловый I/O и обработка ошибок</h2>
+  <h2>io.open, readfile, mkdir, обработка ошибок</h2>
+  <div class="step-desc">
+    В сессии: <em>"local f = io.open(PROMPTS_FILE, 'w') тут нужно чтоб файл создавался если его нет"</em>, <em>"для чего нужна проверка if f then"</em>, <em>"ошибка Unknown function: appendfile"</em>. Вы работаете с файлами на строках 18–24, 42–58 <code>functions.lua</code>.
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">functions.lua, строки 18–24, 42–58</span>
+    <code>
+      <span class="comment">-- Запись в лог (строки 18–24)</span><br>
+      <span class="keyword">local</span> f = <span class="func">io.open</span>(<span class="func">GetPromptLogPath</span>(), <span class="string">'a'</span>)<br>
+      <span class="keyword">if</span> f <span class="keyword">then</span><br>
+          f:<span class="func">write</span>(entry)<br>
+          f:<span class="func">close</span>()<br>
+      <span class="keyword">else</span><br>
+          <span class="func">vim.notify</span>(<span class="string">'Failed to write to prompt log'</span>, <span class="func">vim.log.levels.ERROR</span>)<br>
+      <span class="keyword">end</span><br>
+<br>
+      <span class="comment">-- Чтение лога (строка 38)</span><br>
+      <span class="keyword">local</span> content = <span class="func">vim.fn</span>.readfile(log_path)<br>
+<br>
+      <span class="comment">-- Архивация (строки 42–58)</span><br>
+      <span class="keyword">local</span> archive_f = <span class="func">io.open</span>(archive_path, <span class="string">'a'</span>)<br>
+      <span class="keyword">if</span> archive_f <span class="keyword">then</span><br>
+        <span class="keyword">for</span> _, line <span class="keyword">in</span> <span class="func">ipairs</span>(content) <span class="keyword">do</span><br>
+          archive_f:<span class="func">write</span>(line .. <span class="string">'\n'</span>)<br>
+        <span class="keyword">end</span><br>
+        archive_f:<span class="func">close</span>()<br>
+      <span class="keyword">end</span>
+    </code>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «local f = io.open(PROMPTS_FILE, 'w') тут нужно чтоб файл создавался если его нет»</div>
+    <div class="a">
+      <code>io.open(path, 'w')</code> — режим <code>'w'</code> <strong>создаёт файл автоматически</strong>, если его нет. Режим <code>'a'</code> (append) — тоже создаёт. <code>io.open()</code> возвращает <code>nil, err_msg</code> при ошибке (например, нет прав на запись в директорию). Поэтому проверка <code>if f then</code> — это не «создать файл если нет», а «если файл успешно открыт, записать; иначе — ошибка».
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «для чего нужна проверка if f then»</div>
+    <div class="a">
+      <code>io.open()</code> может вернуть <code>nil</code> (ошибка открытия файла). <code>if f then</code> проверяет: если файл открыт успешно — пишем. Иначе — <code>vim.notify()</code> об ошибке. Без этой проверки — crash при <code>f:write()</code> на <code>nil</code>.
+    </div>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «ошибка Unknown function: appendfile»</div>
+    <div class="a">
+      <code>appendfile()</code> — такой Vimscript-функции <strong>не существует</strong>. В Lua для добавления в конец файла — <code>io.open(path, 'a')</code>. Режим <code>'a'</code> (append) — стандартный способ.
+    </div>
+  </div>
+
+  <ul class="task-list">
+    <li><span class="task-num">5.1</span> <span class="task-text"><strong>Режимы <code>io.open()</code>:</strong> <code>'r'</code> (чтение), <code>'w'</code> (запись, создаёт/перезаписывает), <code>'a'</code> (добавление, создаёт). На строках 18, 42, 55 <code>functions.lua</code> используется <code>'a'</code> (append) — файл создаётся автоматически, если нет. Понимать разницу между <code>'w'</code> (перезаписывает) и <code>'a'</code> (добавляет).</span></li>
+    <li><span class="task-num">5.2</span> <span class="task-text"><strong>Обработка ошибок <code>io.open()</code>:</strong> возвращает <code>nil, err_msg</code> при ошибке. <code>if f then</code> — проверка успешности. Альтернативы: <code>assert(io.open(...))</code>, <code>pcall()</code>. На строках 19, 43, 56 <code>functions.lua</code> — три места с проверкой.</span></li>
+    <li><span class="task-num">5.3</span> <span class="task-text"><strong>Разница <code>vim.fn.readfile()</code> vs <code>io.open()</code>:</strong> <code>vim.fn.readfile(path)</code> читает весь файл в массив строк (строка 38). <code>io.open(path, 'r')</code> — открывает файловый дескриптор, <code>f:read('*a')</code> — читает всё содержимое как строку. Когда какой использовать.</span></li>
+    <li><span class="task-num">5.4</span> <span class="task-text"><strong>Создание директорий:</strong> <code>vim.fn.mkdir(path, 'p')</code> — создание директории с вложенными. Где в вашем коде не используется (но может понадобиться для <code>~/.local/share/</code>, если директория не существует).</span></li>
+  </ul>
+</div>
+
+<!-- STEP 6 -->
+<div class="step step-6">
+  <div class="step-number">ШАГ 6 ИЗ 6 · Модульность и команды Neovim</h2>
+  <h2>require(), local M = {}, nvim_create_user_command</h2>
+  <div class="step-desc">
+    В сессии: <em>"что такое user command в терминах nvim"</em>, <em>"где этот файл лучше положить"</em>, <em>"ошибка ... attempt to call field 'GetPromptLogPath' (a nil value)"</em>. Это про структуру Lua-кода в Neovim.
+  </div>
+
+  <div class="code-block">
+    <span class="file-ref">functions.lua, строки 134–140; commands.lua, строки 70–76, 130–138</span>
+    <code>
+      <span class="comment">-- Экспорт функций (functions.lua, строки 134–140)</span><br>
+      <span class="keyword">return</span> {<br>
+        GetProjectRoot = GetProjectRoot,<br>
+        SendSelectionToAgent = SendSelectionToAgent,<br>
+        ClearPromptLog = ClearPromptLog,<br>
+        GetPromptLogPath = GetPromptLogPath,<br>
+        GetPromptArchivePath = GetPromptArchivePath,<br>
+      }<br>
+<br>
+      <span class="comment">-- User commands (commands.lua, строки 70–76)</span><br>
+      <span class="func">vim.api</span>.nvim_create_user_command(<span class="string">'PromptClear'</span>, <span class="keyword">function</span>()<br>
+        <span class="func">require</span>(<span class="string">'custom.functions'</span>).ClearPromptLog()<br>
+      <span class="keyword">end</span>, { desc = <span class="string">'Clear the prompt log file (archived)'</span> })<br>
+<br>
+      <span class="comment">-- Использование (commands.lua, строка 80)</span><br>
+      <span class="keyword">local</span> log_path = <span class="func">require</span>(<span class="string">'custom.functions'</span>).GetPromptLogPath()
+    </code>
+  </div>
+
+  <div class="explanation">
+    <div class="q">Ваш вопрос: «ошибка ... attempt to call field 'GetPromptLogPath' (a nil value)»</div>
+    <div class="a">
+      Эта ошибка возникла, потому что <code>GetPromptLogPath</code> не была экспортирована в <code>return { ... }</code> на строке 134–140 <code>functions.lua</code>. Когда <code>require('custom.functions')</code> возвращает таблицу без <code>GetPromptLogPath</code> — <code>nil</code>. Решение: добавить в <code>return { ... }</code>.
+    </div>
+  </div>
+
+  <ul class="task-list">
+    <li><span class="task-num">6.1</span> <span class="task-text"><strong>Паттерн <code>local M = {}</code> + <code>return M</code>:</strong> как <code>require('custom.functions')</code> возвращает таблицу экспортированных функций. Почему <code>GetPromptLogPath</code> была <code>nil</code> — не добавлена в <code>return</code> на строках 134–140. Как исправить: добавить в таблицу возврата.</span></li>
+    <li><span class="task-num">6.2</span> <span class="task-text"><strong><code>nvim_create_user_command</code>:</strong> <code>{name, callback, opts}</code>. Аргументы <code>opts</code>: <code>nargs</code> (количество аргументов), <code>desc</code> (описание), <code>range</code> (принимает ли диапазон). На строках 70–76 <code>commands.lua</code> — три user commands: <code>PromptLog</code>, <code>PromptClear</code>, <code>PromptShow</code>.</span></li>
+    <li><span class="task-num">6.3</span> <span class="task-text"><strong>Структура Neovim-расширения:</strong> <code>lua/custom/functions.lua</code> — функции, <code>lua/custom/commands.lua</code> — команды и keymaps. Как <code>require()</code> маппится на файловую систему. Почему <code>lua/custom/commands.lua</code> загружается раньше <code>lua/custom/functions.lua</code> и как избежать ошибок «nil value».</span></li>
+  </ul>
+</div>
+
+<div class="summary-box" style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-bottom: 48px;">
+  <h3 style="color: #fff; font-size: 1rem; margin-bottom: 12px;">Итоговый план: 6 шагов, 1 час в день</h3>
+  <ul style="margin: 12px 0; padding-left: 20px;">
+    <li style="font-size: 0.8rem; color: var(--text); margin-bottom: 6px; line-height: 1.5;"><strong>День 1 (Шаг 1):</strong> vim.fn vs vim.api vs vim.bo — кто есть кто. 4 вопроса из сессии. Читаем строки 2–3, 8, 63, 80–81, 92, 97, 104, 126 <code>functions.lua</code> и строки 57, 65, 70, 74, 78, 114–127 <code>commands.lua</code>.</li>
+    <li style="font-size: 0.8rem; color: var(--text); margin-bottom: 6px; line-height: 1.5;"><strong>День 2 (Шаг 2):</strong> Lua-синтаксис — <code>#</code>, <code>[[...]]</code>, параметры функций, таблицы. 4 вопроса. Читаем строки 41, 96–98, 101, 111–117 <code>functions.lua</code> и строки 114, 117 <code>commands.lua</code>.</li>
+    <li style="font-size: 0.8rem; color: var(--text); margin-bottom: 6px; line-height: 1.5;"><strong>День 3 (Шаг 3):</strong> Marks <code>'&lt;</code>, <code>'&gt;</code>, <code>nvim_buf_get_mark</code>, <code>vim.fn.line</code>. 4 вопроса. Читаем строки 80–81, 86 <code>functions.lua</code> и строку 65 <code>commands.lua</code>.</li>
+    <li style="font-size: 0.8rem; color: var(--text); margin-bottom: 6px; line-height: 1.5;"><strong>День 4 (Шаг 4):</strong> Жизненный цикл буфера — <code>buflisted</code>, <code>buftype</code>, <code>bufhidden</code>, <code>:bd</code>. 4 вопроса. Читаем строки 113–128 <code>commands.lua</code>.</li>
+    <li style="font-size: 0.8rem; color: var(--text); margin-bottom: 6px; line-height: 1.5;"><strong>День 5 (Шаг 5):</strong> Файловый I/O — <code>io.open()</code>, <code>readfile()</code>, обработка ошибок. 4 вопроса. Читаем строки 18–24, 38, 42–58 <code>functions.lua</code>.</li>
+    <li style="font-size: 0.8rem; color: var(--text); margin-bottom: 6px; line-height: 1.5;"><strong>День 6 (Шаг 6):</strong> Модульность — <code>require()</code>, <code>local M = {}</code>, <code>nvim_create_user_command</code>. 3 вопроса. Читаем строки 70–76, 80, 134–140 <code>functions.lua</code> и строки 70–76, 130–138 <code>commands.lua</code>.</li>
+  </ul>
+  <p style="font-size: 0.78rem; color: var(--text-dim); margin-top: 16px; line-height: 1.6;">
+    <strong>Как работать:</strong> каждый день берёте один шаг. Открываете соответствующие строки кода. Читаете <code>explanation</code> (ваш вопрос → ответ). Затем читаете <code>task-list</code> (конкретные подзадачи). Повторяете: читаете код → задаёте вопрос → получаете ответ → закрепляете вызовом команды → наблюдаете результат.
+  </p>
+</div>
+
+<div class="footer">
+  Сгенерировано на основе анализа сессии 01a01551 · kickstart.nvim · 18 августа 2026
+</div>
+
+</div>
+</body>
+</html>

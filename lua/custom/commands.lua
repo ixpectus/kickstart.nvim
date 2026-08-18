@@ -58,7 +58,8 @@ local map = vim.api.nvim_set_keymap
 
 local default_opts = { noremap = true, silent = true }
 map('n', '<C-c>', [[<cmd>lua CustomCommands(require("telescope.themes").get_dropdown{commands = GetCommands()}):find()<cr>]], default_opts)
-map('n', '<leader>s', [[<cmd>SendSelectionToAgent<cr>]], default_opts)
+
+-- Keymaps for sending selection to AI agent (visual mode).
 map(
   'v',
   '<leader>s',
@@ -66,74 +67,29 @@ map(
   default_opts
 )
 
--- Prompt log commands.
+-- Prompt log commands (now delegated to ai_prompt).
 vim.api.nvim_create_user_command('PromptLog', function(opts)
-  require('custom.functions').SendSelectionToAgent()
+  require('custom.ai_prompt').SendSelectionToAgent()
 end, { nargs = 0, desc = 'Send selection to agent and log prompt' })
 
 vim.api.nvim_create_user_command('PromptClear', function()
-  require('custom.functions').ClearPromptLog()
+  require('custom.ai_prompt').ClearPromptLog()
 end, { desc = 'Clear the prompt log file (archived)' })
 
 vim.api.nvim_create_user_command('PromptShow', function(opts)
   local n = tonumber(opts.args) or 50
-  local log_path = require('custom.functions').GetPromptLogPath()
-  local content = vim.fn.readfile(log_path)
-
-  -- Split file into chunks by entry separator.
-  local chunks = {}
-  local current = {}
-  for _, line in ipairs(content) do
-    if line:match '^--- %[' then
-      if #current > 0 then
-        table.insert(chunks, current)
-      end
-      current = { line }
-    else
-      table.insert(current, line)
-    end
-  end
-  if #current > 0 then
-    table.insert(chunks, current)
-  end
-
-  -- Keep the last N chunks.
-  local total = #chunks
-  local start_idx = math.max(1, total - n + 1)
-  local result = {}
-  for i = start_idx, total do
-    for _, line in ipairs(chunks[i]) do
-      table.insert(result, line)
-    end
-  end
-
-  OpenTemporaryBuffer(result)
+  require('custom.ai_prompt').PromptShow(n)
 end, { nargs = '?', desc = 'Show last N prompt log entries in a scratch buffer' })
 
-local function OpenTemporaryBuffer(lines)
-  local buf = vim.api.nvim_create_buf(false, false)
-  vim.api.nvim_set_current_buf(buf)
-  vim.api.nvim_buf_set_name(buf, '[PromptShow]')
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-
-  -- Read-only.
-  vim.bo[buf].buftype = 'nofile'
-  vim.bo[buf].bufhidden = 'wipe'
-  vim.bo[buf].modifiable = false
-
-  -- Close with <q> or <Esc>.
-  vim.keymap.set('n', '<Esc>', '<cmd>bd<CR>', { buffer = buf, silent = true })
-  vim.keymap.set('n', 'q', '<cmd>bd<CR>', { buffer = buf, silent = true })
-  return buf
-end
-
 vim.api.nvim_create_user_command('PromptOpen', function()
-  local path = require('custom.functions').GetPromptLogPath()
-  vim.cmd('edit ' .. path)
+  require('custom.ai_prompt').PromptOpen()
 end, { desc = 'Open the prompt log file in a new buffer' })
 
 vim.api.nvim_create_user_command('PromptArchiveShow', function()
-  local archive_path = require('custom.functions').GetPromptArchivePath()
-  local lines = vim.fn.readfile(archive_path)
-  OpenTemporaryBuffer(lines)
+  require('custom.ai_prompt').PromptArchiveShow()
 end, { desc = 'Show the full prompt archive in a scratch buffer' })
+
+-- User-facing command for SendSelectionToAgent.
+vim.api.nvim_create_user_command('SendSelectionToAgent', function()
+  require('custom.ai_prompt').SendSelectionToAgent()
+end, { desc = 'Send visual selection to AI agent' })
