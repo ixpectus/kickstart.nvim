@@ -1,5 +1,7 @@
-local actions = require 'telescope.actions'
+require 'custom.ai_prompt'
+
 local pickers = require 'telescope.pickers'
+local actions = require 'telescope.actions'
 local finders = require 'telescope.finders'
 local conf = require('telescope.config').values
 local action_state = require 'telescope.actions.state'
@@ -55,41 +57,5 @@ CustomCommands = function(opts)
 end
 
 local map = vim.api.nvim_set_keymap
-
 local default_opts = { noremap = true, silent = true }
 map('n', '<C-c>', [[<cmd>lua CustomCommands(require("telescope.themes").get_dropdown{commands = GetCommands()}):find()<cr>]], default_opts)
-
--- Keymaps for sending selection to AI agent (visual mode).
-map(
-  'v',
-  '<leader>s',
-  [[<Cmd>lua require('custom.functions').SendSelectionToAgent(vim.api.nvim_buf_get_mark(0, '<')[1], vim.api.nvim_buf_get_mark(0, '>')[1])<CR>]],
-  default_opts
-)
-
--- Prompt log commands (now delegated to ai_prompt).
-vim.api.nvim_create_user_command('PromptLog', function(opts)
-  require('custom.ai_prompt').SendSelectionToAgent()
-end, { nargs = 0, desc = 'Send selection to agent and log prompt' })
-
-vim.api.nvim_create_user_command('PromptClear', function()
-  require('custom.ai_prompt').ClearPromptLog()
-end, { desc = 'Clear the prompt log file (archived)' })
-
-vim.api.nvim_create_user_command('PromptShow', function(opts)
-  local n = tonumber(opts.args) or 50
-  require('custom.ai_prompt').PromptShow(n)
-end, { nargs = '?', desc = 'Show last N prompt log entries in a scratch buffer' })
-
-vim.api.nvim_create_user_command('PromptOpen', function()
-  require('custom.ai_prompt').PromptOpen()
-end, { desc = 'Open the prompt log file in a new buffer' })
-
-vim.api.nvim_create_user_command('PromptArchiveShow', function()
-  require('custom.ai_prompt').PromptArchiveShow()
-end, { desc = 'Show the full prompt archive in a scratch buffer' })
-
--- User-facing command for SendSelectionToAgent.
-vim.api.nvim_create_user_command('SendSelectionToAgent', function()
-  require('custom.ai_prompt').SendSelectionToAgent()
-end, { desc = 'Send visual selection to AI agent' })

@@ -86,9 +86,6 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
---
-require 'custom.autocmd'
-
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
@@ -417,7 +414,7 @@ require('lazy').setup({
           { name = 'path' },
           { name = 'buffer' },
           { name = 'vim_dadbod_completion' },
-          -- { name = 'supermaven' },
+          { name = 'supermaven' },
         },
       }
     end,
@@ -479,7 +476,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-{ -- Highlight, edit, and navigate code
+  { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -530,7 +527,8 @@ require('lazy').setup({
   require 'custom.plugins.splitjoin',
   -- require 'custom.plugins.nvim-dap-virtual-text',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-  -- require 'custom.plugins.supermaven',
+  require 'custom.plugins.supermaven',
+  -- require 'custom.plugins.pi',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -563,6 +561,9 @@ require('lazy').setup({
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 require 'custom.commands'
+require 'custom.functions'
+require 'custom.ai_prompt'
+require 'custom.autocmd'
 --
 vim.diagnostic.config {
   virtual_text = true,
