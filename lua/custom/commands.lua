@@ -58,6 +58,8 @@ local map = vim.api.nvim_set_keymap
 
 local default_opts = { noremap = true, silent = true }
 map('n', '<C-c>', [[<cmd>lua CustomCommands(require("telescope.themes").get_dropdown{commands = GetCommands()}):find()<cr>]], default_opts)
+map('n', '<leader>s', [[<cmd>SendSelectionToAgent<cr>]], default_opts)
+map('v', '<leader>s', [[<Cmd>lua require('custom.functions').SendSelectionToAgent(vim.api.nvim_buf_get_mark(0, '<')[1], vim.api.nvim_buf_get_mark(0, '>')[1])<CR>]], default_opts)
 
 -- Prompt log commands.
 vim.api.nvim_create_user_command('PromptLog', function(opts)
@@ -71,13 +73,39 @@ end, { desc = 'Clear the prompt log file' })
 vim.api.nvim_create_user_command('PromptShow', function(opts)
   local n = tonumber(opts.args) or 50
   local log_path = require('custom.functions').GetPromptLogPath()
-  local lines = vim.fn.readfile(log_path)
-  table.remove(lines, 1, math.max(1, #lines - n))
+  local content = vim.fn.readfile(log_path)
 
-  -- Create a scratch buffer with the last N log entries.
-  local buf = vim.api.nvim_create_buf(false, true)
+  -- Split file into chunks by entry separator.
+  local chunks = {}
+  local current = {}
+  for _, line in ipairs(content) do
+    if line:match '^--- %[' then
+      if #current > 0 then
+        table.insert(chunks, current)
+      end
+      current = { line }
+    else
+      table.insert(current, line)
+    end
+  end
+  if #current > 0 then
+    table.insert(chunks, current)
+  end
+
+  -- Keep the last N chunks.
+  local total = #chunks
+  local start_idx = math.max(1, total - n + 1)
+  local result = {}
+  for i = start_idx, total do
+    for _, line in ipairs(chunks[i]) do
+      table.insert(result, line)
+    end
+  end
+
+  local buf = vim.api.nvim_create_buf(false, false)
+  vim.api.nvim_set_current_buf(buf)
   vim.api.nvim_buf_set_name(buf, '[PromptShow]')
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, result)
 
   -- Read-only.
   vim.bo[buf].buftype = 'nofile'
