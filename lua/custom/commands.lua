@@ -70,3 +70,6 @@ map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opt
 
 -- Visual-mode keymap: calls SendCommandAndSelectionToPi.
 map('v', '<leader> ', [[<Esc><Cmd>lua require('custom.functions').SendCommandAndSelectionToPi()<CR>]], default_opts)
+
+-- Обновить текущий буфер (для случаев, когда агент правит файл).
+map('n', '<leader>r', [[<Cmd>checktime<CR>]], default_opts)

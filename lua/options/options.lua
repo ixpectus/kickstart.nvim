@@ -26,6 +26,7 @@ vim.opt.hls = true
 vim.opt.background = "dark"
 vim.opt.termguicolors = true
 vim.opt.backspace = "indent,eol,start"
+vim.opt.autoread = true
 
 -- Set completeopt to have a better completion experience
 vim.opt.completeopt = "menuone,noinsert,noselect"
