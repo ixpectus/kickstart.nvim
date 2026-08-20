@@ -14,14 +14,37 @@ function SendSelectionToAgent(from, to)
   return require('custom.ai_prompt').SendSelectionToAgent(from, to)
 end
 
---- Wrapper: clear the prompt log (delegates to ai_prompt).
---- @see custom.ai_prompt.ClearPromptLog
 function ClearPromptLog()
   return require('custom.ai_prompt').ClearPromptLog()
+end
+
+--- Send visual selection as a command to the Pi agent via herdr.
+--- Calls SendSelectionToAgent, reads the clipboard, then sends to Pi.
+--- @param opts? table { skip_status_check? boolean, tab_id? string }
+function SendCommandAndSelectionToPi(opts)
+  opts = opts or {}
+
+  -- 1. Запомнить содержимое буфера обмена до вызова SendSelectionToAgent.
+  local before = vim.fn.getreg('+')
+
+  -- 2. Вызвать SendSelectionToAgent (спрашивает prompt ОДИН РАЗ, кладёт в буфер)
+  require('custom.ai_prompt').SendSelectionToAgent()
+
+  -- 3. Прочитать содержимое буфера обмена после.
+  local after = vim.fn.getreg('+')
+
+  -- 4. Если содержимое не изменилось — ничего не отправляем.
+  if before == after then
+    return
+  end
+
+  -- 5. Отправить через SendCommandToPi.
+  require('custom.herdr').SendCommandToPi(after, opts)
 end
 
 return {
   GetProjectRoot = GetProjectRoot,
   SendSelectionToAgent = SendSelectionToAgent,
   ClearPromptLog = ClearPromptLog,
+  SendCommandAndSelectionToPi = SendCommandAndSelectionToPi,
 }
