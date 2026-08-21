@@ -30,10 +30,10 @@ function M.restart_pi(pane_id, opts)
       return
     end
 
-    -- Сформировать команду запуска.
-    local pi_cmd = opts.session_id
-      and ('pi --session ' .. opts.session_id)
-      or 'pi'
+    local pi_cmd = 'pi'
+    if opts.session_id and opts.session_id ~= '' then
+      pi_cmd = pi_cmd .. ' --session ' .. opts.session_id
+    end
 
     -- Запустить нового агента Pi — отправить команду в pane.
     local ok_start = sender.send_to_pane(pane_id, pi_cmd)
