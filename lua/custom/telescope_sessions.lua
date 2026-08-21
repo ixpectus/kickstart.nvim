@@ -44,10 +44,14 @@ function M.find()
   local max_msg = 0
   for _, s in ipairs(entries) do
     local d = s.duration or '-'
-    if #d > max_dur then max_dur = #d end
+    if #d > max_dur then
+      max_dur = #d
+    end
     local mc = s.message_count or 0
     local mc_str = tostring(mc)
-    if #mc_str > max_msg then max_msg = #mc_str end
+    if #mc_str > max_msg then
+      max_msg = #mc_str
+    end
   end
 
   -- Форматируем строку отображения
@@ -146,6 +150,30 @@ function M.find()
               vim.notify('Session ID скопирован: ' .. selection.value.id, vim.log.levels.INFO)
             end
           end, { buffer = prompt_bufnr, silent = true, desc = 'Copy session ID' })
+
+          -- Открыть сессию в Markdown-формате
+          vim.keymap.set('n', 'm', function()
+            local selection = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            if selection and selection.value.file then
+              local tmpfile = vim.fn.tempname() .. '.md'
+              local out = vim.fn.system(
+                string.format(
+                  "python3 ~/scripts/pi_session_viewer.py '%s' --stats 2>/dev/null",
+                  selection.value.file
+                )
+              )
+              if vim.v.shell_error == 0 and #out > 0 then
+                -- записываем во временный файл
+                io.output(tmpfile)
+                io.write(out)
+                io.close()
+                vim.cmd('edit ' .. vim.fn.fnameescape(tmpfile))
+              else
+                vim.notify('Не удалось открыть сессию', vim.log.levels.ERROR)
+              end
+            end
+          end, { buffer = prompt_bufnr, silent = true, desc = 'Open session as Markdown' })
 
           return true
         end,
