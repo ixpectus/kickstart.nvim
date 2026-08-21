@@ -14,6 +14,7 @@ function get_commands()
     { 'pi restart', ':PiRestart' },
     { 'scratch', ':lua require"custom.scratch".open()' },
     { 'git log', ':lua require"custom.scratch".command("git log")' },
+    { 'pi sessions telescope', [[:lua require('custom.herdr.telescope_sessions').find()]] },
     { 'pi sessions', ':lua require"custom.scratch".command("pi_sessions_list.py")' },
     { 'pi sessions message 50', ':lua require"custom.scratch".command("pi_sessions_list.py --min-messages 50")' },
     { 'pi sessions minute 30', ':lua require"custom.scratch".command("pi_sessions_list.py --min-duration 1800")' },
