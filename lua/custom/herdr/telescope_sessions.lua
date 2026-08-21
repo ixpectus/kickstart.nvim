@@ -36,9 +36,33 @@ function M.find()
       -- берём дату и время: "2026-08-21T14:42:55"
       date_str = dt:sub(1, 19):gsub('T', ' ')
     end
+    entries[#entries + 1] = s
+  end
 
-    local display = string.format('%d %s %s %s ', s.message_count, s.duration or '-', date_str, s.id:sub(1, 8))
-    table.insert(entries, {
+  -- Находим максимальные длину duration и msg_count
+  local max_dur = 0
+  local max_msg = 0
+  for _, s in ipairs(entries) do
+    local d = s.duration or '-'
+    if #d > max_dur then max_dur = #d end
+    local mc = s.message_count or 0
+    local mc_str = tostring(mc)
+    if #mc_str > max_msg then max_msg = #mc_str end
+  end
+
+  -- Форматируем строку отображения
+  entries = vim.tbl_map(function(s)
+    local date_str = ''
+    if s.first_message_date then
+      local dt = s.first_message_date:gsub('Z', '')
+      date_str = dt:sub(1, 19):gsub('T', ' ')
+    end
+    local id8 = s.id:sub(1, 8)
+    local duration_f = s.duration or '-'
+    local msg_count = string.format('%' .. tostring(max_msg) .. 'd', s.message_count)
+    local dur_f = string.format('%' .. tostring(max_dur) .. 's', duration_f)
+    local display = string.format('%s  %s  %s  %s', msg_count, dur_f, date_str, id8)
+    return {
       id = s.id,
       file = s.file,
       message_count = s.message_count,
@@ -48,8 +72,8 @@ function M.find()
       duration = s.duration,
       display = display,
       ordinal = s.id,
-    })
-  end
+    }
+  end, entries)
 
   if #entries == 0 then
     vim.notify('Сессии не найдены', vim.log.levels.WARN)
