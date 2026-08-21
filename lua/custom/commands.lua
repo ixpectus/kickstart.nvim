@@ -14,7 +14,7 @@ function get_commands()
     { 'pi restart', ':PiRestart' },
     { 'scratch', ':lua require"custom.scratch".open()' },
     { 'git log', ':lua require"custom.scratch".command("git log")' },
-    { 'pi sessions telescope', [[:lua require('custom.herdr.telescope_sessions').find()]] },
+    { 'pi sessions telescope', [[:lua require('custom.telescope_sessions').find()]] },
     { 'pi sessions', ':lua require"custom.scratch".command("pi_sessions_list.py")' },
     { 'pi sessions message 50', ':lua require"custom.scratch".command("pi_sessions_list.py --min-messages 50")' },
     { 'pi sessions minute 30', ':lua require"custom.scratch".command("pi_sessions_list.py --min-duration 1800")' },
@@ -77,3 +77,7 @@ map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opt
 
 -- Visual-mode keymap: calls SendCommandAndSelectionToPi.
 map('v', '<leader> ', [[<Esc><Cmd>lua require('custom.functions').send_command_and_selection_to_pi()<CR>]], default_opts)
+
+vim.api.nvim_create_user_command('PiSessionsTelescope', function()
+  require('custom.telescope_sessions').find()
+end, { desc = 'Show pi sessions in telescope' })
