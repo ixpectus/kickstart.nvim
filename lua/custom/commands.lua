@@ -7,11 +7,13 @@ local finders = require 'telescope.finders'
 local conf = require('telescope.config').values
 local action_state = require 'telescope.actions.state'
 
-function GetCommands()
+function get_commands()
   local commands = {
     { 'open prompts file', ':PromptOpen' },
     { 'clear prompts file', ':PromptClear' },
-    { 'pg pro repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/pg_pro"}}' },
+    { 'pi restart', ':PiRestart' },
+    { 'scratch', ':lua require"custom.scratch".open()' },
+    -- { 'pg pro repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/pg_pro"}}' },
     { 'mine projects', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/projects"}}' },
     { 'nvim plugin repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/.local/share/kickstart.nvim/lazy/"}}' },
     { 'git file top contributors', ':CmdGitFileTopContributors' },
@@ -32,9 +34,9 @@ function GetCommands()
   return resCommands
 end
 
-CustomCommands = function(opts)
+custom_commands = function(opts)
   return pickers.new(opts, {
-    prompt_title = 'customCommands',
+    prompt_title = 'Custom commands',
     finder = finders.new_table {
       results = opts.commands,
       entry_maker = function(entry)
@@ -46,7 +48,7 @@ CustomCommands = function(opts)
       end,
     },
     sorter = conf.generic_sorter(opts),
-    attach_mappings = function(prompt_bufnr, map)
+    attach_mappings = function(prompt_bufnr)
       actions.select_default:replace(function()
         local selection = action_state.get_selected_entry()
         actions.close(prompt_bufnr)
@@ -59,7 +61,7 @@ end
 
 local map = vim.api.nvim_set_keymap
 local default_opts = { noremap = true, silent = true }
-map('n', '<C-c>', [[<cmd>lua CustomCommands(require("telescope.themes").get_dropdown{commands = GetCommands()}):find()<cr>]], default_opts)
+map('n', '<C-c>', [[<cmd>lua custom_commands(require("telescope.themes").get_dropdown{commands = get_commands()}):find()<cr>]], default_opts)
 
 vim.api.nvim_create_user_command('SendCommandAndSelectionToPi', function()
   require('custom.functions').send_command_and_selection_to_pi()
@@ -70,6 +72,3 @@ map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opt
 
 -- Visual-mode keymap: calls SendCommandAndSelectionToPi.
 map('v', '<leader> ', [[<Esc><Cmd>lua require('custom.functions').send_command_and_selection_to_pi()<CR>]], default_opts)
-
--- Обновить текущий буфер (для случаев, когда агент правит файл).
-map('n', '<leader>r', [[<Cmd>checktime<CR>]], default_opts)

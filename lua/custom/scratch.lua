@@ -6,7 +6,8 @@ local M = {}
 --- @param lines string[]
 --- @return number bufnr
 function M.open(lines)
-  local buf = vim.api.nvim_create_buf(false, false)
+  lines = lines or {}
+  local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_set_current_buf(buf)
   vim.api.nvim_buf_set_name(buf, '[Scratch]')
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
