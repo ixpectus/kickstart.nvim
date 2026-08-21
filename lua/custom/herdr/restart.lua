@@ -5,7 +5,7 @@ local M = {}
 
 --- Перезапустить агент Pi: отправить /quit, дождаться остановки, запустить нового.
 --- @param pane_id string pane_id агента
---- @param opts? table { quit_timeout? number }
+--- @param opts? table { quit_timeout? number, session_id? string }
 function M.restart_pi(pane_id, opts)
   opts = opts or {}
 
@@ -30,8 +30,13 @@ function M.restart_pi(pane_id, opts)
       return
     end
 
-    -- Запустить нового агента Pi — отправить 'pi' в pane.
-    local ok_start = sender.send_to_pane(pane_id, 'pi')
+    -- Сформировать команду запуска.
+    local pi_cmd = opts.session_id
+      and ('pi --session ' .. opts.session_id)
+      or 'pi'
+
+    -- Запустить нового агента Pi — отправить команду в pane.
+    local ok_start = sender.send_to_pane(pane_id, pi_cmd)
     if not ok_start then
       vim.schedule(function()
         vim.notify('herdr: failed to restart agent in pane ' .. pane_id, vim.log.levels.ERROR)

@@ -104,8 +104,12 @@ function M.restart_pi(opts)
 end
 
 -- Регистрация :PiRestart user command.
- vim.api.nvim_create_user_command('PiRestart', function()
-  M.restart_pi()
-end, { desc = 'Restart the Pi agent in the current Herdr session' })
+ vim.api.nvim_create_user_command('PiRestart', function(args)
+   M.restart_pi({ session_id = args.args or nil })
+ end, {
+   nargs = '*',
+   desc = 'Restart the Pi agent in the current Herdr session',
+   complete = function() return {} end
+ })
 
 return M
