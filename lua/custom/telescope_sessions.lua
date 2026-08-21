@@ -126,7 +126,7 @@ function M.find()
             actions.close(prompt_bufnr)
             local file = selection.value.file
             if file then
-              vim.cmd('edit ' .. vim.fn.fnameescape(file))
+              vim.cmd.edit(file)
             end
           end)
 
@@ -151,7 +151,7 @@ function M.find()
                 io.output(tmpfile)
                 io.write(out)
                 io.close()
-                vim.cmd('edit ' .. vim.fn.fnameescape(tmpfile))
+                vim.cmd.edit(tmpfile)
               else
                 vim.notify('Не удалось открыть сессию', vim.log.levels.ERROR)
               end
