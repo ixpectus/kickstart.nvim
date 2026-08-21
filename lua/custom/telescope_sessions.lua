@@ -27,22 +27,10 @@ function M.find()
     return
   end
 
-  -- Форматируем строку отображения
-  local entries = {}
-  for _, s in ipairs(sessions) do
-    local date_str = ''
-    if s.first_message_date then
-      local dt = s.first_message_date:gsub('Z', '')
-      -- берём дату и время: "2026-08-21T14:42:55"
-      date_str = dt:sub(1, 19):gsub('T', ' ')
-    end
-    entries[#entries + 1] = s
-  end
-
   -- Находим максимальные длину duration и msg_count
   local max_dur = 0
   local max_msg = 0
-  for _, s in ipairs(entries) do
+  for _, s in pairs(sessions) do
     local d = s.duration or '-'
     if #d > max_dur then
       max_dur = #d
@@ -55,7 +43,7 @@ function M.find()
   end
 
   -- Форматируем строку отображения
-  entries = vim.tbl_map(function(s)
+  sessions = vim.tbl_map(function(s)
     local date_str = ''
     if s.first_message_date then
       local dt = s.first_message_date:gsub('Z', '')
@@ -77,9 +65,9 @@ function M.find()
       display = display,
       ordinal = s.id,
     }
-  end, entries)
+  end, sessions)
 
-  if #entries == 0 then
+  if #sessions == 0 then
     vim.notify('Сессии не найдены', vim.log.levels.WARN)
     return
   end
@@ -96,7 +84,7 @@ function M.find()
           mirror = true,
         },
         finder = require('telescope.finders').new_table {
-          results = entries,
+          results = sessions,
           entry_maker = function(entry)
             return {
               value = entry,
@@ -157,12 +145,7 @@ function M.find()
             actions.close(prompt_bufnr)
             if selection and selection.value.file then
               local tmpfile = vim.fn.tempname() .. '.md'
-              local out = vim.fn.system(
-                string.format(
-                  "python3 ~/scripts/pi_session_viewer.py '%s' --stats 2>/dev/null",
-                  selection.value.file
-                )
-              )
+              local out = vim.fn.system(string.format("python3 ~/scripts/pi_session_viewer.py '%s' --stats 2>/dev/null", selection.value.file))
               if vim.v.shell_error == 0 and #out > 0 then
                 -- записываем во временный файл
                 io.output(tmpfile)
