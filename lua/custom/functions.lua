@@ -1,4 +1,3 @@
-
 --- Get the project root directory.
 function GetProjectRoot()
   local root = vim.fn.finddir(('.git' .. '/..'), (vim.fn.expand '%:p:h' .. ';'))
@@ -25,13 +24,13 @@ function SendCommandAndSelectionToPi(opts)
   opts = opts or {}
 
   -- 1. Запомнить содержимое буфера обмена до вызова SendSelectionToAgent.
-  local before = vim.fn.getreg('+')
+  local before = vim.fn.getreg '+'
 
   -- 2. Вызвать SendSelectionToAgent (спрашивает prompt ОДИН РАЗ, кладёт в буфер)
   require('custom.ai_prompt').SendSelectionToAgent()
 
   -- 3. Прочитать содержимое буфера обмена после.
-  local after = vim.fn.getreg('+')
+  local after = vim.fn.getreg '+'
 
   -- 4. Если содержимое не изменилось — ничего не отправляем.
   if before == after then
@@ -42,9 +41,15 @@ function SendCommandAndSelectionToPi(opts)
   require('custom.herdr').SendCommandToPi(after, opts)
 end
 
+--- Перезапустить агент Pi.
+function RestartPi()
+  require('custom.herdr').RestartPi()
+end
+
 return {
   GetProjectRoot = GetProjectRoot,
   SendSelectionToAgent = SendSelectionToAgent,
   ClearPromptLog = ClearPromptLog,
   SendCommandAndSelectionToPi = SendCommandAndSelectionToPi,
+  RestartPi = RestartPi,
 }

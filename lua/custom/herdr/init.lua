@@ -80,4 +80,32 @@ end
 function M.GetAgentByPaneId(pane_id)
   return finder.GetAgentByPaneId(pane_id)
 end
+
+--- Перезапустить агент Pi: отправить /quit, дождаться остановки, запустить новую сессию.
+---
+--- @param opts? table опции: { pane_id? string, tab_id? string, quit_timeout? number }
+--- @return boolean true при успехе, false при ошибке
+function M.RestartPi(opts)
+  opts = opts or {}
+  local pane_id = opts.pane_id
+
+  -- Если pane_id не передан — найти его через tab_id.
+  if not pane_id or pane_id == '' then
+    pane_id = M.FindPiPane(opts.tab_id)
+    if not pane_id then
+      vim.schedule(function()
+        vim.notify('herdr: pane not found for restart', vim.log.levels.ERROR)
+      end)
+      return false
+    end
+  end
+
+  return require 'custom.herdr.restart'.RestartPi(pane_id, finder, opts)
+end
+
+-- Регистрация :PiRestart user command.
+vim.api.nvim_create_user_command('PiRestart', function()
+  M.RestartPi()
+end, { desc = 'Restart the Pi agent in the current Herdr session' })
+
 return M

@@ -149,8 +149,45 @@ function M.GetAgentByPaneId(pane_id)
       return agent
     end
   end
+return nil
+end
 
-  return nil
+--- Ждать, пока агент остановится (достигнет статуса `done` или исчезнет из списка).
+---
+--- @param pane_id string pane_id агента
+--- @param target_statuses table список целевых статусов (например {'done', 'stopped'})
+--- @param timeout? number макс. время ожидания в секундах (по умолч. 30)
+--- @return boolean true если агент остановился/исчез, false при таймауте
+function M.WaitForStatus(pane_id, target_statuses, timeout)
+  target_statuses = target_statuses or { 'done' }
+  timeout = timeout or 30
+
+  local interval = 0.5 -- 500 мс между проверками
+  local max_iterations = math.floor(timeout / interval)
+  local checked = 0
+
+  while checked < max_iterations do
+    checked = checked + 1
+    local agent = M.GetAgentByPaneId(pane_id)
+
+    if agent then
+      -- Агент найден — проверить статус.
+      local status = agent.agent_status or ''
+      for _, ts in ipairs(target_statuses) do
+        if status == ts then
+          return true
+        end
+      end
+    else
+      -- Агент не найден — значит, исчез из agent list после /quit.
+      -- Это тоже успех.
+      return true
+    end
+
+    vim.uv.sleep(math.floor(interval * 1000))
+  end
+
+  return false
 end
 
 return M
