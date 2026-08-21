@@ -6,7 +6,7 @@ local M = {}
 --- @param from number start line (1-indexed)
 --- @param to number end line (1-indexed)
 --- @return string text with line numbers
-function M.FormatLinesWithNumbers(from, to)
+function M.format_lines_with_numbers(from, to)
   local lines = {}
   for i = from, to do
     local txt = vim.fn.getline(i)
@@ -22,7 +22,7 @@ end
 --- @param selected_text string text block with line numbers (from FormatLinesWithNumbers)
 --- @param prompt string user instruction
 --- @return string formatted payload
-function M.BuildPromptPayload(fname, from, to, selected_text, prompt)
+function M.build_prompt_payload(fname, from, to, selected_text, prompt)
   return string.format(
     [[File: %s
 Lines: %d-%d

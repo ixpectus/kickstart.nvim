@@ -5,7 +5,7 @@ local M = {}
 --- Create a read-only scratch buffer with the given lines.
 --- @param lines string[]
 --- @return number bufnr
-function M.Open(lines)
+function M.open(lines)
   local buf = vim.api.nvim_create_buf(false, false)
   vim.api.nvim_set_current_buf(buf)
   vim.api.nvim_buf_set_name(buf, '[Scratch]')

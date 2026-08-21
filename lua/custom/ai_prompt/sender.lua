@@ -10,7 +10,7 @@ local M = {}
 ---
 --- @param from? number start line (defaults to visual mark)
 --- @param to? number end line (defaults to visual mark)
-function M.SendSelectionToAgent(from, to)
+function M.send_selection_to_agent(from, to)
   -- Accept range from the Ex command; fall back to marks for direct Lua calls.
   from = from or vim.fn.line "'<"
   to = to or vim.fn.line "'>"
@@ -27,7 +27,7 @@ function M.SendSelectionToAgent(from, to)
   local fname = vim.fn.expand '%:p'
 
   -- Build the text block (with line numbers).
-  local selected_text = builder.FormatLinesWithNumbers(from, to)
+  local selected_text = builder.format_lines_with_numbers(from, to)
 
   -- Prompt the user for an instruction / prompt.
   local prompt = vim.fn.input('Prompt: ', '')
@@ -37,13 +37,13 @@ function M.SendSelectionToAgent(from, to)
   end
 
   -- Compose the full payload.
-  local payload = builder.BuildPromptPayload(fname, from, to, selected_text, prompt)
+  local payload = builder.build_prompt_payload(fname, from, to, selected_text, prompt)
 
   -- Save to the system clipboard (+ register).
   vim.fn.setreg('+', payload)
 
   -- Log to persistent file.
-  storage.LogPromptToFile(fname, from, to, selected_text, prompt)
+  storage.log_prompt_to_file(fname, from, to, selected_text, prompt)
 end
 
 return M

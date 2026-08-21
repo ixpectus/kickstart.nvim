@@ -38,7 +38,7 @@ end
 ---
 --- @param tab_id? string явный tab_id; если nil — берётся из $HERDR_TAB_ID
 --- @return string|nil pane_id (например 'wE:p1'), или nil если не найден
-function M.FindPiPane(tab_id)
+function M.find_pi_pane(tab_id)
   tab_id = tab_id or get_tab_id()
 
   if not tab_id then
@@ -75,7 +75,7 @@ end
 ---
 --- @param tab_id? string явный tab_id; если nil — берётся из $HERDR_TAB_ID
 --- @return table|nil таблица агента с полями pane_id, agent_status и т.д.
-function M.GetAgentInfo(tab_id)
+function M.get_agent_info(tab_id)
   tab_id = tab_id or get_tab_id()
 
   if not tab_id then
@@ -100,13 +100,13 @@ end
 ---
 --- @param tab_id? string явный tab_id; если nil — берётся из $HERDR_TAB_ID
 --- @return boolean
-function M.IsAgentIdle(tab_id)
+function M.is_agent_idle(tab_id)
   tab_id = tab_id or get_tab_id()
   if not tab_id then
     return false
   end
 
-  local agent = M.GetAgentInfo(tab_id)
+  local agent = M.get_agent_info(tab_id)
   if not agent then
     return false
   end
@@ -119,13 +119,13 @@ end
 ---
 --- @param tab_id? string явный tab_id; если nil — берётся из $HERDR_TAB_ID
 --- @return string|nil статус агента ('idle', 'working', 'done')
-function M.GetAgentStatus(tab_id)
+function M.get_agent_status(tab_id)
   tab_id = tab_id or get_tab_id()
   if not tab_id then
     return nil
   end
 
-  local agent = M.GetAgentInfo(tab_id)
+  local agent = M.get_agent_info(tab_id)
   if not agent then
     return nil
   end
@@ -136,7 +136,7 @@ end
 ---
 --- @param pane_id string pane_id (например 'wE:p1')
 --- @return table|nil таблица агента с полями pane_id, agent_status и т.д.
-function M.GetAgentByPaneId(pane_id)
+function M.get_agent_by_pane_id(pane_id)
   local data = fetch_agent_list()
   if not data or not data.result or not data.result.agents then
     return nil

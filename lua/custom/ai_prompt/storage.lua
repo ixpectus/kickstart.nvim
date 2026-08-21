@@ -3,12 +3,12 @@
 local M = {}
 
 --- Get the path to the persistent prompt log file.
-function M.GetPromptLogPath()
+function M.get_prompt_log_path()
   return vim.fn.stdpath 'data' .. '/prompts.log'
 end
 
 --- Get the path to the prompt log archive file.
-function M.GetPromptArchivePath()
+function M.get_prompt_archive_path()
   return vim.fn.stdpath 'data' .. '/prompts_archive.log'
 end
 
@@ -18,7 +18,7 @@ end
 --- @param to number end line (1-indexed)
 --- @param selected_text string the text block (with line numbers)
 --- @param prompt string user prompt
-function M.LogPromptToFile(fname, from, to, selected_text, prompt)
+function M.log_prompt_to_file(fname, from, to, selected_text, prompt)
   local timestamp = vim.fn.strftime '%Y-%m-%d %H:%M:%S'
   local entry = string.format(
     '--- [%s] ---\nFile: %s\nLines: %d-%d\n\n%s\n\nPrompt: %s\n\n',
@@ -29,7 +29,7 @@ function M.LogPromptToFile(fname, from, to, selected_text, prompt)
     selected_text,
     prompt
   )
-  local f = io.open(M.GetPromptLogPath(), 'a')
+  local f = io.open(M.get_prompt_log_path(), 'a')
   if f then
     f:write(entry)
     f:close()
@@ -39,9 +39,9 @@ function M.LogPromptToFile(fname, from, to, selected_text, prompt)
 end
 
 --- Clear the persistent prompt log file, archiving its contents first.
-function M.ClearPromptLog()
-  local log_path = M.GetPromptLogPath()
-  local archive_path = M.GetPromptArchivePath()
+function M.clear_prompt_log()
+  local log_path = M.get_prompt_log_path()
+  local archive_path = M.get_prompt_archive_path()
 
   -- Read current log content.
   local content = vim.fn.readfile(log_path)

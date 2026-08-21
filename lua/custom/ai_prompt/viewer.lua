@@ -8,9 +8,9 @@ local M = {}
 
 --- Show the last N prompt log entries in a scratch buffer.
 --- @param n number number of entries to show (default 50)
-function M.PromptShow(n)
+function M.prompt_show(n)
   n = tonumber(n) or 50
-  local log_path = storage.GetPromptLogPath()
+  local log_path = storage.get_prompt_log_path()
   local content = vim.fn.readfile(log_path)
 
   -- Split file into chunks by entry separator.
@@ -40,20 +40,20 @@ function M.PromptShow(n)
     end
   end
 
-  scratch.Open(result)
+  scratch.open(result)
 end
 
 --- Open the prompt log file in a new buffer.
-function M.PromptOpen()
-  local path = storage.GetPromptLogPath()
+function M.prompt_open()
+  local path = storage.get_prompt_log_path()
   vim.cmd('edit ' .. path)
 end
 
 --- Show the full prompt archive in a scratch buffer.
-function M.PromptArchiveShow()
-  local archive_path = storage.GetPromptArchivePath()
+function M.prompt_archive_show()
+  local archive_path = storage.get_prompt_archive_path()
   local lines = vim.fn.readfile(archive_path)
-  scratch.Open(lines)
+  scratch.open(lines)
 end
 
 return M

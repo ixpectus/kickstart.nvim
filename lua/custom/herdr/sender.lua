@@ -20,7 +20,7 @@ end
 --- @param pane_id string pane_id окна (например 'wE:p1')
 --- @param prompt string текст промпта для отправки
 --- @return boolean true при успехе, false при ошибке
-function M.SendToPane(pane_id, prompt)
+function M.send_to_pane(pane_id, prompt)
   if not pane_id or pane_id == '' then
     vim.schedule(function()
       vim.notify('herdr: pane_id is empty', vim.log.levels.ERROR)
@@ -61,7 +61,7 @@ end
 --- @param tab_id? string явный tab_id (для проверки статуса)
 --- @param opts? table опции: { skip_status_check? boolean }
 --- @return boolean true при успехе, false при ошибке
-function M.SendCommandToPi(pane_id, prompt, tab_id, opts)
+function M.send_command_to_pi(pane_id, prompt, tab_id, opts)
   opts = opts or {}
   if not pane_id or pane_id == '' then
     vim.schedule(function()
@@ -80,7 +80,7 @@ function M.SendCommandToPi(pane_id, prompt, tab_id, opts)
   -- Проверить статус агента перед отправкой.
   local skip = opts.skip_status_check or false
   if not skip and tab_id then
-    local agent = finder.GetAgentInfo(tab_id)
+    local agent = finder.get_agent_info(tab_id)
     if agent and (agent.agent_status == 'working') then
       vim.schedule(function()
         vim.notify('herdr: agent is currently working (status: ' .. agent.agent_status .. '), skipping send', vim.log.levels.WARN)
@@ -89,7 +89,7 @@ function M.SendCommandToPi(pane_id, prompt, tab_id, opts)
     end
   end
 
-  return M.SendToPane(pane_id, prompt)
+  return M.send_to_pane(pane_id, prompt)
 end
 
 return M

@@ -61,16 +61,15 @@ local map = vim.api.nvim_set_keymap
 local default_opts = { noremap = true, silent = true }
 map('n', '<C-c>', [[<cmd>lua CustomCommands(require("telescope.themes").get_dropdown{commands = GetCommands()}):find()<cr>]], default_opts)
 
--- Ex-команда: SendCommandAndSelectionToPi
 vim.api.nvim_create_user_command('SendCommandAndSelectionToPi', function()
-  require('custom.functions').SendCommandAndSelectionToPi()
+  require('custom.functions').send_command_and_selection_to_pi()
 end, { desc = 'Send visual selection to Pi agent via herdr' })
 
 -- Normal-mode keymap: calls the Ex command (аналог <leader>s).
 map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opts)
 
 -- Visual-mode keymap: calls SendCommandAndSelectionToPi.
-map('v', '<leader> ', [[<Esc><Cmd>lua require('custom.functions').SendCommandAndSelectionToPi()<CR>]], default_opts)
+map('v', '<leader> ', [[<Esc><Cmd>lua require('custom.functions').send_command_and_selection_to_pi()<CR>]], default_opts)
 
 -- Обновить текущий буфер (для случаев, когда агент правит файл).
 map('n', '<leader>r', [[<Cmd>checktime<CR>]], default_opts)

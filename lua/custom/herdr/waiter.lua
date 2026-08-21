@@ -14,7 +14,7 @@ local M = {}
 --- @param target_statuses? table список целевых статусов (например {'done', 'stopped'})
 --- @param timeout? number макс. время ожидания в секундах (по умолч. 30)
 --- @param on_done? function callback(true) при успехе, callback(false) при таймауте
-function M.WaitForStatus(pane_id, target_statuses, timeout, on_done)
+function M.wait_for_status(pane_id, target_statuses, timeout, on_done)
   target_statuses = target_statuses or { 'done' }
   timeout = timeout or 30
 
@@ -23,7 +23,7 @@ function M.WaitForStatus(pane_id, target_statuses, timeout, on_done)
 
   local function check()
     checked = checked + 1
-    local agent = finder.GetAgentByPaneId(pane_id)
+    local agent = finder.get_agent_by_pane_id(pane_id)
 
     if on_done then
       if agent then
