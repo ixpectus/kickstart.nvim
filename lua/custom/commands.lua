@@ -1,5 +1,7 @@
 require 'custom.ai_prompt'
 require 'custom.herdr'
+require 'custom.exec'
+require 'custom.herdr'
 
 local pickers = require 'telescope.pickers'
 local actions = require 'telescope.actions'

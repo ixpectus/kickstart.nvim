@@ -228,7 +228,6 @@ command! -nargs=? -complete=command CmdGitProjectTopContributorsRecent call CmdG
 command! -nargs=1 -complete=command R call CmdMineRedir(<q-args>)
 command! -nargs=1 -complete=command L call CmdMineLua(<q-args>)
 command! -nargs=? -complete=command CmdYankHistory call CmdYankHistory()
-command! -nargs=* Exec call CmdRunCurrentScript(<f-args>)
 command! -nargs=* CmdRunTest call CmdRunTest(<f-args>)
 command! -nargs=* CmdRunLastTest call CmdRunLastTest(<f-args>)
 command! -nargs=* CmdRunTableTest call CmdRunTableTest(<f-args>)
@@ -238,7 +237,7 @@ command! -range SendSelectionToAgent <line1>,<line2>lua require('custom.function
 
 nmap <Leader>ft :CmdRunTest<Cr>
 nmap <Leader>rtt :CmdRunTableTest<Cr>
-nmap <Leader>x :Exec
+nmap <Leader>x :Exec %
 
 " nmap <Leader>mr :R make run<Cr>
 " nmap <Leader>mt :R make test<Cr>

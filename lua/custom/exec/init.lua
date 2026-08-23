@@ -1,0 +1,67 @@
+--- exec module — run files in a scratch window (horizontal split by default).
+---
+--- Public API:
+---   :Exec <path>
+---
+--- Handlers are registered in handler.lua by file extension.
+---
+--- @usage local exec = require 'custom.exec'
+--- @usage exec.run_file('/path/to/script.sh')
+--- @usage -- or from vim:  :Exec /path/to/script.sh
+
+local M = {}
+
+--- Resolve a possibly relative path to an absolute one.
+--- Expands Vim special tokens: %, <cfile>, <cword>, <afile>.
+local function resolve_path(path)
+  path = path:gsub('^~', vim.env.HOME)
+  -- Expand Vim special tokens.
+  path = vim.fn.expand(path)
+  if path:sub(1, 1) ~= '/' then
+    path = vim.fn.getcwd() .. '/' .. path
+  end
+  return path
+end
+
+--- Register the :Exec user command.
+local function register_commands()
+  -- :Exec [path] — run a file in a scratch window (horizontal split by default).
+  vim.api.nvim_create_user_command('Exec', function(opts)
+    local path = opts.args
+    if path and path ~= '' then
+      M.run_file(resolve_path(path))
+    end
+  end, {
+    nargs = '*',
+    complete = function(_, context)
+      return vim.fn.getcompletion(context.line, 'file')
+    end,
+  })
+end
+
+register_commands()
+
+--- Run a file using the appropriate handler and display output in a
+--- scratch window (horizontal split by default).
+--- @param path string
+function M.run_file(path)
+  path = resolve_path(path)
+
+  local handler = require 'custom.exec.handler'
+
+  local ext = path:match('%.([^%.]+)$')
+  local handler_fn = ext and handler.handlers['.' .. ext]
+
+  if handler_fn then
+    handler_fn(path)
+  elseif vim.loop.fs_stat(path) and bit.band(vim.loop.fs_stat(path).mode, 73) ~= 0 then
+    -- No explicit handler but file is executable — treat as shell script.
+    handler.shell(path)
+  else
+    vim.schedule(function()
+      vim.notify('exec: no handler for "' .. path .. '"', vim.log.levels.WARN)
+    end)
+  end
+end
+
+return M

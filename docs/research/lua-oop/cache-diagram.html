@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lua OOP — Cache diagram</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --accent: #7c6ff0;
+    --accent2: #4fc3f7;
+    --text: #c9d1d9;
+    --muted: #6b7280;
+    --green: #34d399;
+    --red: #f87171;
+    --orange: #fbbf24;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  h1 {
+    font-size: 1.1rem;
+    color: var(--accent2);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .container {
+    width: 100%;
+    max-width: 860px;
+  }
+
+  /* ── Phase boxes ── */
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .phase-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  /* ── Nodes ── */
+  .nodes {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .node {
+    background: #161922;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    min-width: 160px;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .node:hover { border-color: var(--accent); }
+  .node-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .node-cache .node-label { color: var(--accent2); }
+  .node-cache2 .node-label { color: var(--accent); }
+  .node-inst .node-label { color: var(--green); }
+  .node-inst2 .node-label { color: var(--orange); }
+
+  .fields {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: left;
+    line-height: 1.6;
+  }
+  .fields .key { color: var(--text); }
+  .fields .val { color: var(--muted); }
+  .fields .arrow { color: var(--accent); font-weight: 600; }
+
+  /* ── Arrows ── */
+  .arrows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1rem 0;
+  }
+  .arrow-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .arrow-line .line {
+    width: 60px;
+    height: 1.5px;
+    background: var(--border);
+    position: relative;
+  }
+  .arrow-line .line::after {
+    content: '▸';
+    position: absolute;
+    right: -8px;
+    top: -9px;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+  .arrow-line .label { color: var(--text); font-style: italic; }
+
+  /* ── Lookup chain ── */
+  .chain {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .chain .pill {
+    background: #161922;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .chain .pill strong { color: var(--text); }
+  .chain .pill .hl { color: var(--accent2); font-weight: 600; }
+  .chain .arrow { color: var(--accent); font-size: 1rem; }
+
+  /* ── Code block ── */
+  pre {
+    background: #13151c;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: var(--muted);
+  }
+  pre .kw { color: var(--accent); }
+  pre .str { color: var(--green); }
+  pre .cmt { color: #4a5060; font-style: italic; }
+  pre .fn { color: var(--orange); }
+  pre .tbl { color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<h1>lua-oop / cache.lua — структура</h1>
+<div class="container">
+
+  <!-- Phase 1: creation -->
+  <div class="phase">
+    <div class="phase-title">Phase 1 — Создание объектов</div>
+    <div class="nodes">
+      <div class="node node-cache">
+        <div class="node-label">cache</div>
+        <div class="fields">
+          <div><span class="key">__call</span> <span class="arrow">→</span> <span class="val">функция-конструктор</span></div>
+        </div>
+      </div>
+      <div class="arrow-line"><span class="line"></span><span class="label">metatable</span></div>
+      <div class="node node-cache2">
+        <div class="node-label">Cache</div>
+        <div class="fields">
+          <div><span class="key">data</span> <span class="arrow">→</span> <span class="val">{}</span></div>
+          <div><span class="key">__index</span> <span class="arrow">→</span> <span class="val">Cache (строка 13)</span></div>
+          <div><span class="key">:print()</span> <span class="arrow">→</span> <span class="val">метод</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2: instantiation -->
+  <div class="phase">
+    <div class="phase-title">Phase 2 — Вызов Cache()</div>
+    <div class="nodes" style="justify-content:center;">
+      <div class="node node-cache" style="min-width:120px;">
+        <div class="node-label">Cache()</div>
+      </div>
+      <div class="arrow-line"><span class="line"></span><span class="label">lua ищет Cache.__index → cache.__call</span></div>
+      <div class="node node-cache2" style="min-width:120px;">
+        <div class="node-label">cache.__call(self)</div>
+        <div class="fields">
+          <div><span class="key">self</span> = Cache</div>
+          <div><span class="kw">return</span> <span class="tbl">setmetatable</span>({data={}}, self)</div>
+        </div>
+      </div>
+      <div class="arrow-line"><span class="line"></span><span class="label">новый объект</span></div>
+      <div class="node node-inst">
+        <div class="node-label">экземпляр (c)</div>
+        <div class="fields">
+          <div><span class="key">data</span> <span class="arrow">→</span> <span class="val">{}</span></div>
+          <div><span class="key">metatable</span> <span class="arrow">→</span> <span class="hl">Cache</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3: method lookup -->
+  <div class="phase">
+    <div class="phase-title">Phase 3 — Поиск метода c:print('3')</div>
+    <div class="chain">
+      <span class="pill"><strong>c</strong> → нет <span class="hl">:print</span></span>
+      <span class="arrow">↓</span>
+      <span class="pill"><strong>c.__index</strong> = <span class="hl">Cache</span></span>
+      <span class="arrow">↓</span>
+      <span class="pill"><strong>Cache.print(c, '3')</strong></span>
+    </div>
+    <pre style="margin-top:1rem;">
+<span class="cmt">-- цепочка поиска поля</span>
+<span class="tbl">экземпляр</span> → <span class="tbl">экземпляр.__index</span> → <span class="tbl">Cache</span> → <span class="tbl">Cache.__index</span> → <span class="tbl">cache</span> → <span class="tbl">cache.__index</span> → <span class="tbl">__call</span></pre>
+  </div>
+
+  <!-- Code -->
+  <div class="phase">
+    <div class="phase-title">cache.lua</div>
+    <pre><span class="cmt">-- 1. cache: таблица-конструктор</span>
+<span class="kw">local</span> cache = {
+  __call = <span class="kw">function</span>(self, ...)
+    <span class="cmt">-- self = Cache (metatable экземпляра)</span>
+    <span class="kw">local</span> obj = <span class="tbl">setmetatable</span>({data = {}}, self)
+    <span class="kw">return</span> obj
+  <span class="kw">end</span>,
+}
+
+<span class="cmt">-- 2. Cache: метатаблица = cache</span>
+<span class="kw">local</span> Cache = <span class="tbl">setmetatable</span>({data = {}}, cache)
+
+<span class="cmt">-- 3. Cache.__index = Cache (методы)</span>
+Cache.__index = Cache
+<span class="kw">function</span> Cache:<span class="fn">print</span>(val)
+  <span class="tbl">print</span>(val)
+<span class="kw">end</span>
+
+<span class="cmt">-- 4. c = Cache() → новый объект</span>
+<span class="kw">local</span> c = <span class="tbl">Cache</span>()
+c:<span class="fn">print</span> <span class="str">'3'</span></pre>
+  </div>
+
+</div>
+</body>
+</html>

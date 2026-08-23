@@ -414,7 +414,7 @@ require('lazy').setup({
           { name = 'path' },
           { name = 'buffer' },
           { name = 'vim_dadbod_completion' },
-          { name = 'supermaven' },
+          -- { name = 'supermaven' },
         },
       }
     end,
