@@ -43,22 +43,36 @@ exec.run_file('/путь/к/файлу')
 
 ### 6. Обработчики в одном файле `handler.lua`
 
-- **Shell handler**:
-  1. Проверяет `vim.loop.fs_stat(path).mode` на executable bit.
-  2. Вызывает `vim.fn.system(path .. args)`.
-  3. Выводит результат через `scratch.command(output)`.
+### 6. Обработчики в одном файле `handler.lua`
 
-- **Lua handler**:
-  1. Вызывает `vim.fn.system("lua5.4 " .. path)`.
-  2. Выводит результат через `scratch.command(output)`.
+- **Shell handler** (`M.shell`):
+  1. Проверяет существование файла через `getFileStatIfExists`.
+  2. Проверяет биты исполняемости через `validateExecutable`.
+  3. Вызывает `scratch.command(path, { layout = 'split' })`.
+
+- **Lua handler** (`M.lua`):
+  1. Проверяет существование файла через `getFileStatIfExists`.
+  2. Вызывает `scratch.command('lua5.4 ' .. path, { layout = 'split' })`.
 
 ### 7. Команда Vim
 
 Через `vim.api.nvim_create_user_command`:
 
 ```lua
-vim.api.nvim_create_user_command('ExecRun', function(opts)
-  local path = opts.args
-  require('custom.exec').run_file(path)
-end, { nargs = 1, complete = 'file' })
+vim.api.nvim_create_user_command('Exec', function(opts)
+  M.run_file(opts.args or '')
+end, {
+  nargs = '*',
+  complete = function(_, context)
+    return vim.fn.getcompletion(context.line, 'file')
+  end,
+})
 ```
+
+### 8. Рефакторинг
+
+- Убран `vim.schedule` — уведомления вызываются напрямую.
+- `resolve_path` использует `expand('%:p')` и `expand(path)` вместо ручного подставления `~` и `getcwd`.
+- `path:match('%.([^%.]+)$')` заменён на `vim.fn.fnamemodify(path, ':e')`.
+- Вынесена общая проверка файла в `getFileStatIfExists` и проверка исполняемости в `validateExecutable`.
+- Убраны неиспользуемые переменные `buf` и лишние присваивания.
