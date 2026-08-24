@@ -14,8 +14,17 @@
 
 local finder = require 'custom.herdr.finder'
 local sender = require 'custom.herdr.sender'
-local waiter = require 'custom.herdr.waiter'
 local M = {}
+
+local function register_commands()
+  vim.api.nvim_create_user_command('PiRestart', function(args)
+    M.restart_pi({ session_id = args.args or nil })
+  end, {
+    nargs = '*',
+    desc = 'Restart the Pi agent in the current Herdr session',
+    complete = function() return {} end
+  })
+end
 
 --- Найти pane_id агента Pi в текущем workspace.
 ---
@@ -33,7 +42,6 @@ end
 function M.send_command_to_pi(prompt, opts)
   opts = opts or {}
   local pane_id = opts.pane_id
-  local tab_id = opts.tab_id
 
   -- Если pane_id не передан — найти его через tab_id.
   if not pane_id or pane_id == '' then
@@ -103,13 +111,8 @@ function M.restart_pi(opts)
   end
 end
 
--- Регистрация :PiRestart user command.
- vim.api.nvim_create_user_command('PiRestart', function(args)
-   M.restart_pi({ session_id = args.args or nil })
- end, {
-   nargs = '*',
-   desc = 'Restart the Pi agent in the current Herdr session',
-   complete = function() return {} end
- })
+function M.setup()
+  register_commands()
+end
 
 return M
