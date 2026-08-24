@@ -38,8 +38,6 @@ local function register_commands()
   })
 end
 
-register_commands()
-
 --- Run a file using the appropriate handler and display output in a
 --- scratch window (horizontal split by default).
 --- @param path string|nil
@@ -64,6 +62,10 @@ function M.run_file(path)
       vim.notify('exec: no handler for "' .. path .. '"', vim.log.levels.WARN)
     end
   end
+end
+
+function M.setup()
+  register_commands()
 end
 
 return M

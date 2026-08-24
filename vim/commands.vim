@@ -237,7 +237,8 @@ command! -range SendSelectionToAgent <line1>,<line2>lua require('custom.function
 
 nmap <Leader>ft :CmdRunTest<Cr>
 nmap <Leader>rtt :CmdRunTableTest<Cr>
-nmap <Leader>x :Exec<Cr>
+nmap <Leader>xx :Exec<Cr>
+nmap <Leader>xq :ScratchClose<Cr>
 
 " nmap <Leader>mr :R make run<Cr>
 " nmap <Leader>mt :R make test<Cr>
