@@ -26,7 +26,7 @@ end
 
 --- Create a scratch buffer displayed in a split window.
 --- @param lines string[]
---- @param opts? table { layout? 'split'|'vsplit', right? boolean }
+--- @param opts? table { layout? 'split'|'vsplit'|'full' }
 --- @return number bufnr
 function M.open(lines, opts)
   lines = lines or {}
@@ -41,6 +41,12 @@ function M.open(lines, opts)
   -- Close with <q> or <Esc>.
   vim.keymap.set('n', '<Esc>', '<cmd>bd<CR>', { buffer = buf, silent = true })
   vim.keymap.set('n', 'q', '<cmd>bd<CR>', { buffer = buf, silent = true })
+
+  -- 'full': replace current window buffer (no split, no float).
+  if opts.layout == 'full' then
+    vim.api.nvim_win_set_buf(0, buf)
+    return buf
+  end
 
   local cur_win = vim.api.nvim_get_current_win()
 
@@ -61,13 +67,13 @@ function M.open(lines, opts)
 
   -- Create a new split. Default: horizontal (hsplit) at bottom.
   if layout == 'vsplit' then
-    vim.cmd('vsplit')
+    vim.cmd 'vsplit'
     local new_win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_width(new_win, scratch_width())
     vim.api.nvim_win_set_buf(new_win, buf)
     vim.api.nvim_set_current_win(cur_win)
   else
-    vim.cmd('split')
+    vim.cmd 'split'
     local new_win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_height(new_win, scratch_height())
     vim.api.nvim_win_set_buf(new_win, buf)

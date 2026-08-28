@@ -133,6 +133,7 @@ function M.find()
           -- Скопировать id сессии
           vim.keymap.set('n', 'y', function()
             local selection = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
             if selection and selection.value.id then
               vim.fn.setreg('+', selection.value.id)
               vim.notify('Session ID скопирован: ' .. selection.value.id, vim.log.levels.INFO)

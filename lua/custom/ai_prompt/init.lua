@@ -12,7 +12,7 @@ local viewer = require 'custom.ai_prompt.viewer'
 -- ---------------------------------------------------------------------------
 
 local function register_commands()
-  vim.api.nvim_create_user_command('PromptLog', function(opts)
+  vim.api.nvim_create_user_command('PromptLog', function()
     sender.send_selection_to_agent()
   end, { nargs = 0, desc = 'Send selection to agent and log prompt' })
 
@@ -22,7 +22,7 @@ local function register_commands()
 
   vim.api.nvim_create_user_command('PromptShow', function(opts)
     local n = tonumber(opts.args) or 50
-    viewer.prompt_show(n)
+    viewer.prompt_show(n, { layout = 'full' })
   end, { nargs = '?', desc = 'Show last N prompt log entries in a scratch buffer' })
 
   vim.api.nvim_create_user_command('PromptOpen', function()
@@ -30,7 +30,7 @@ local function register_commands()
   end, { desc = 'Open the prompt log file in a new buffer' })
 
   vim.api.nvim_create_user_command('PromptArchiveShow', function()
-    viewer.prompt_archive_show()
+    viewer.prompt_archive_show { layout = 'full' }
   end, { desc = 'Show the full prompt archive in a scratch buffer' })
 
   vim.api.nvim_create_user_command('SendSelectionToAgent', function()
@@ -43,7 +43,7 @@ local function register_commands()
   -- Visual-mode keymap: <leader>s sends the selection.
   map('v', '<leader>s', [[<Esc><Cmd>lua require('custom.ai_prompt').send_selection_to_agent()<CR>]], default_opts)
   -- Esc is neccessary to stop current visual selection,
-    -- it marks saved and can be accessed with vim.fn.line "'<"
+  -- it marks saved and can be accessed with vim.fn.line "'<"
 
   -- Normal-mode keymap: calls the Ex command.
   map('n', '<leader>s', [[<Esc><cmd>SendSelectionToAgent<cr>]], default_opts)

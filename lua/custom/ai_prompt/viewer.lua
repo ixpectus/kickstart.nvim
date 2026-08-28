@@ -5,10 +5,10 @@ local scratch = require 'custom.scratch'
 
 local M = {}
 
-
 --- Show the last N prompt log entries in a scratch buffer.
 --- @param n number number of entries to show (default 50)
-function M.prompt_show(n)
+--- @param opts? table forwarded to scratch.open
+function M.prompt_show(n, opts)
   n = tonumber(n) or 50
   local log_path = storage.get_prompt_log_path()
   local content = vim.fn.readfile(log_path)
@@ -40,7 +40,7 @@ function M.prompt_show(n)
     end
   end
 
-  scratch.open(result)
+  scratch.open(result, opts)
 end
 
 --- Open the prompt log file in a new buffer.
@@ -50,10 +50,11 @@ function M.prompt_open()
 end
 
 --- Show the full prompt archive in a scratch buffer.
-function M.prompt_archive_show()
+--- @param opts? table forwarded to scratch.open
+function M.prompt_archive_show(opts)
   local archive_path = storage.get_prompt_archive_path()
   local lines = vim.fn.readfile(archive_path)
-  scratch.open(lines)
+  scratch.open(lines, opts)
 end
 
 return M

@@ -23,19 +23,15 @@ end
 --- @param prompt string user instruction
 --- @return string formatted payload
 function M.build_prompt_payload(fname, from, to, selected_text, prompt)
-  return string.format(
-    [[File: %s
-Lines: %d-%d
-
-%s
-
-Prompt: %s]],
-    fname,
-    from,
-    to,
+  local parts = {
+    'File: ' .. fname,
+    string.format('Lines: %d-%d', from, to),
     selected_text,
-    prompt
-  )
+  }
+  if prompt ~= '' then
+    table.insert(parts, 'Prompt: ' .. prompt)
+  end
+  return table.concat(parts, '\n\n')
 end
 
 return M
