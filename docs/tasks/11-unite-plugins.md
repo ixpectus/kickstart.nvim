@@ -200,3 +200,35 @@ lua/
 - [ ] Добавить `import = 'plugins'` в `lazy.setup(...)` в `init.lua`
 - [ ] Удалить `lua/custom/plugins/` и `lua/kickstart/plugins/`
 - [ ] Протестировать `:Lazy` — все плагины загружаются
+
+---
+
+## Итог исследования
+
+### Статистика
+
+| Категория | Количество |
+|-----------|-----------|
+| Подключённые плагины (custom/plugins) | 14 |
+| Отключённые плагины (custom/plugins) | 8 |
+| Подключённые плагины (kickstart/plugins) | 4 |
+| Отключённые плагины (kickstart/plugins) | 2 |
+| Inline-плагины в init.lua | 9 |
+| **Итого уникальных плагинов** | **30** |
+
+### Ключевые проблемы текущего подхода
+
+1. **Два источника конфигов** — `lua/custom/plugins/` и `lua/kickstart/plugins/` усложняют навигацию
+2. **Inline-плагины в init.lua** — 9 плагинов (включая самые крупные: nvim-cmp, nvim-lsp, conform, mini.nvim, nvim-treesitter) раздувают init.lua до 609 строк
+3. **Дублирование gitsigns.nvim** — базовый конфиг в init.lua + keymaps в kickstart/plugins/gitsigns.lua
+4. **10 отключённых файлов** — аванта, blame, codecompanion, cody, copilot, fzf, neogit, noice, indent_line, neo-tree — занимают место без пользы
+5. **init.lua смешивает** — опции, keymaps, autocmds, custom commands, и плагины в одном файле
+
+### Решаемые задачи
+
+- Объединить все 20 подключённых плагинов в одну директорию `lua/plugins/`
+- Вынести 9 inline-плагинов из init.lua в отдельные файлы
+- Объединить дублирующийся gitsigns.nvim
+- Убрать 10 отключённых файлов (после подтверждения)
+- Сократить init.lua, убрав ~300 строк плагин-конфигов
+- Использовать `import = 'plugins'` для автоматической загрузки

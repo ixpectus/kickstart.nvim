@@ -84,3 +84,13 @@ imap <C-BS> <C-W>
 
 nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
+
+" Undo points for comma and dot
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+
+" Visual move text blocks
+vnoremap K :m '<-2<CR>gv=gv
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap < <gv
+vnoremap > >gv

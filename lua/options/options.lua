@@ -1,32 +1,114 @@
-local cmd = vim.cmd
-vim.opt.spelllang = "en_us,ru_ru"
-vim.opt.spellfile = vim.fn.expand("$HOME/.vim/spell/spell.add")
-cmd("
-inoremap , ,<c-g>u 
-inoremap . .<c-g>u
-")
+--[[
+  Unified Vim options
+  Merged from: init.lua, vim/set.vim, lua/options/options.lua
+--]]
 
--- cmd("set spelllang=en_us,ru_ru")
--- cmd("set spellfile=~/.vim/spell/spell.add")
-cmd("autocmd FileType markdown setlocal spell")
-cmd("set nu rnu")
--- Avoid showing message extra message when using completion
-cmd("set shortmess+=c")
-vim.opt.showcmd = true
-vim.opt.swapfile = false
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
-vim.opt.wrap = true
-vim.opt.relativenumber = true
-vim.opt.wrap = false
-vim.opt.ic = true
-vim.opt.is = true
-vim.opt.hls = true
-vim.opt.background = "dark"
-vim.opt.termguicolors = true
-vim.opt.backspace = "indent,eol,start"
-vim.opt.autoread = true
+local opt = vim.opt
 
--- Set completeopt to have a better completion experience
-vim.opt.completeopt = "menuone,noinsert,noselect"
+-- [[ Appearance ]]
+
+opt.background = 'dark'
+opt.termguicolors = true
+
+-- [[ Numbers ]]
+
+opt.number = true
+opt.relativenumber = true
+
+-- [[ Lines & Scroll ]]
+
+opt.showcmd = true
+opt.showmode = false
+opt.cursorline = true
+opt.scrolloff = 10
+opt.wrap = false
+
+-- [[ Tabs & Indentation ]]
+
+opt.expandtab = true
+opt.tabstop = 2
+opt.shiftwidth = 2
+
+-- [[ Search ]]
+
+opt.ignorecase = true
+opt.smartcase = true
+opt.hlsearch = true
+opt.infercase = true
+
+-- [[ Editor behavior ]]
+
+vim.cmd 'set nocompatible'
+opt.hidden = true
+opt.virtualedit = 'all'
+opt.redrawtime = 10000
+opt.mouse = 'a'
+opt.backspace = 'indent,eol,start'
+opt.breakindent = false
+opt.inccommand = 'split'
+opt.splitright = true
+opt.splitbelow = true
+opt.autoread = true
+opt.autowrite = true
+opt.wildmenu = true
+opt.showmatch = true
+opt.shortmess:append 'c'
+opt.path:append '**'
+
+-- [[ Clipboard ]]
+
+opt.clipboard = 'unnamedplus'
+
+-- [[ Undo & History ]]
+
+opt.undofile = true
+opt.undodir = vim.fn.expand '~/.vim/undodir'
+opt.undolevels = 1000
+opt.undoreload = 10000
+opt.history = 10000
+
+-- [[ File & Encoding ]]
+
+opt.encoding = 'UTF-8'
+opt.fileencodings = { 'utf-8', 'cp1251' }
+
+-- [[ List characters ]]
+
+opt.list = false
+opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
+-- [[ Spell ]]
+
+opt.spelllang = 'en_us,ru_ru'
+opt.spellfile = vim.fn.expand '$HOME/.vim/spell/spell.add'
+opt.dictionary:append '/usr/share/dict/words'
+opt.dictionary:append '/usr/share/dict/russian'
+
+-- [[ Completion ]]
+
+opt.completeopt = 'menuone,noinsert,noselect'
+
+-- [[ Sign column ]]
+
+opt.signcolumn = 'yes'
+
+-- [[ Fold ]]
+
+opt.foldmethod = 'manual'
+
+-- [[ Autocommands ]]
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.complete:append 'd'
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'sql',
+  callback = function()
+    vim.opt_local.commentstring = '/*\\ %s'
+  end,
+})
