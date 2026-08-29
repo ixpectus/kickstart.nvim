@@ -8,10 +8,10 @@ return {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     -- Useful status updates for LSP.
     -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-    { 'j-hui/fidget.nvim',       opts = {} },
+    { 'j-hui/fidget.nvim', opts = {} },
     -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
-    { 'folke/neodev.nvim',       opts = {} },
+    { 'folke/neodev.nvim', opts = {} },
   },
   config = function()
     -- Brief aside: **What is LSP?**
@@ -47,7 +47,7 @@ return {
 
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
       callback = function(event)
-        if vim.api.nvim_buf_get_name(event.buf):match "^%a+://" then
+        if vim.api.nvim_buf_get_name(event.buf):match '^%a+://' then
           return
         end
         -- NOTE: Remember that Lua is a real programming language, and as such it is possible
@@ -179,8 +179,7 @@ return {
           },
         },
         root_dir = function(fname)
-          return require('lspconfig.util').root_pattern('go.mod', '.git')(fname) or
-              require('lspconfig.util').path.dirname(fname)
+          return require('lspconfig.util').root_pattern('go.mod', '.git')(fname) or require('lspconfig.util').path.dirname(fname)
         end,
         single_file_support = true,
       },
