@@ -4,4 +4,5 @@
 vim.cmd [[
   syntax on
   filetype plugin indent on
+  set nocompatible
 ]]

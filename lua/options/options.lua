@@ -1,8 +1,3 @@
---[[
-  Unified Vim options
-  Merged from: init.lua, vim/set.vim, lua/options/options.lua
---]]
-
 local opt = vim.opt
 
 -- [[ Appearance ]]
@@ -38,7 +33,6 @@ opt.infercase = true
 
 -- [[ Editor behavior ]]
 
-vim.cmd 'set nocompatible'
 opt.hidden = true
 opt.virtualedit = 'all'
 opt.redrawtime = 10000
