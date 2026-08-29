@@ -1,6 +1,7 @@
-require('custom.ai_prompt').setup()
+require('custom.prompt_builder').setup()
 require('custom.herdr').setup()
 require('custom.exec').setup()
+require('custom.prompts').setup()
 
 local pickers = require 'telescope.pickers'
 local actions = require 'telescope.actions'
@@ -20,11 +21,11 @@ function get_commands()
     { 'pi sessions message 50', ':lua require"custom.scratch".command("pi_sessions_list.py --min-messages 50")' },
     { 'pi sessions minute 30', ':lua require"custom.scratch".command("pi_sessions_list.py --min-duration 1800")' },
     -- { 'pg pro repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/pg_pro"}}' },
-    { 'mine projects', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/projects"}}' },
-    { 'nvim plugin repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/.local/share/kickstart.nvim/lazy/"}}' },
-    { 'git file top contributors', ':CmdGitFileTopContributors' },
-    { 'git file top recent contributors', ':CmdGitFileTopContributorsRecent' },
-    { 'git project top contributors', ':CmdGitProjectTopContributors' },
+    -- { 'mine projects', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/projects"}}' },
+    -- { 'nvim plugin repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/.local/share/kickstart.nvim/lazy/"}}' },
+    -- { 'git file top contributors', ':CmdGitFileTopContributors' },
+    -- { 'git file top recent contributors', ':CmdGitFileTopContributorsRecent' },
+    -- { 'git project top contributors', ':CmdGitProjectTopContributors' },
   }
   local resCommands = {}
   for _, value in pairs(commands) do

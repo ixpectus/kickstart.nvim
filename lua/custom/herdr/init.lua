@@ -16,25 +16,6 @@ local finder = require 'custom.herdr.finder'
 local sender = require 'custom.herdr.sender'
 local M = {}
 
-local function register_commands()
-  vim.api.nvim_create_user_command('PiRestart', function(args)
-    M.restart_pi { session_id = args.args or nil }
-  end, {
-    nargs = '*',
-    desc = 'Restart the Pi agent in the current Herdr session',
-    complete = function()
-      return {}
-    end,
-  })
-end
-
---- Найти pane_id агента Pi в текущем workspace.
----
---- @param tab_id? string явный tab_id; если nil — берётся из $HERDR_TAB_ID
---- @return string|nil pane_id (например 'wE:p1'), или nil если не найден
-function M.find_pi_pane(tab_id)
-  return finder.find_pi_pane(tab_id)
-end
 
 --- Отправить промпт в окно Pi (проверка статуса — в sender.lua).
 ---
@@ -47,7 +28,7 @@ function M.send_command_to_pi(prompt, opts)
 
   -- Если pane_id не передан — найти его через tab_id.
   if not pane_id or pane_id == '' then
-    pane_id = M.find_pi_pane(tab_id)
+pane_id = finder.find_pi_pane(tab_id)
     if not pane_id then
       vim.schedule(function()
         vim.notify('herdr: pane not found for tab_id=' .. tostring(tab_id), vim.log.levels.ERROR)
@@ -101,7 +82,7 @@ function M.restart_pi(opts)
 
   -- Если pane_id не передан — найти его через tab_id.
   if not pane_id or pane_id == '' then
-    pane_id = M.find_pi_pane(opts.tab_id)
+pane_id = finder.find_pi_pane(opts.tab_id)
     if not pane_id then
       vim.schedule(function()
         vim.notify('herdr: pane not found for restart', vim.log.levels.ERROR)
@@ -111,6 +92,18 @@ function M.restart_pi(opts)
 
     require('custom.herdr.restart').restart_pi(pane_id, opts)
   end
+end
+
+local function register_commands()
+  vim.api.nvim_create_user_command('PiRestart', function(args)
+    M.restart_pi { session_id = args.args or nil }
+  end, {
+    nargs = '*',
+    desc = 'Restart the Pi agent in the current Herdr session',
+    complete = function()
+      return {}
+    end,
+  })
 end
 
 function M.setup()

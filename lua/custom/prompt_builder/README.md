@@ -1,4 +1,4 @@
-# ai_prompt
+# prompt_builder
 
 Модуль для выделения кода и формирования промпта для AI-агента. Выделенный код с номерами строк, пользовательский промпт и путь к файлу формируются в payload и копируются в системный буфер обмена (`+` register). Все промпты логируются в файл.
 
@@ -9,20 +9,20 @@
 | `init.lua` | Точка входа, экспорт публичного API, регистрация команд и keymaps |
 | `storage.lua` | Пути к файлам, запись/чтение логов и архивов |
 | `builder.lua` | Формирование payload (содержимое + форматирование) |
-| `sender.lua` | `SendSelectionToAgent` — основная точка входа (сборка payload + буфер обмена) |
+| `sender.lua` | `SavePromptToClipboard` — основная точка входа (сборка payload + буфер обмена) |
 | `viewer.lua` | Просмотр логов и архивов через scratch-буфер |
 
 ## Публичное API
 
 ```lua
-local ap = require 'custom.ai_prompt'
+local ap = require 'custom.prompt_builder'
 
 -- Пути к файлам
 ap.get_prompt_log_path()       -- '/home/.../data/prompts.log'
 ap.get_prompt_archive_path()   -- '/home/.../data/prompts_archive.log'
 
 -- Отправка выделения
-ap.send_selection_to_agent(from, to)
+ap.save_prompt_to_clipboard(from, to)
 
 -- Формирование payload
 ap.build_prompt_payload(fname, from, to, selected_text, prompt)
@@ -44,14 +44,13 @@ ap.prompt_archive_show()  -- показать полный архив
 | `:PromptShow [N]` | Показать последние N записей лога |
 | `:PromptOpen` | Открыть файл логов в новом буфере |
 | `:PromptArchiveShow` | Показать полный архив |
-| `:SendSelectionToAgent` | Отправить выделение в буфер обмена |
 
 ## Keymaps
 
 | Режим | Клавиша | Действие |
 |-------|---------|----------|
-| Visual | `<leader>s` | Отправить выделение (вызывает `SendSelectionToAgent`) |
-| Normal | `<leader>s` | Вызвать `:SendSelectionToAgent` |
+| Visual | `<leader>s` | Отправить выделение (вызывает `SavePromptToClipboard`) |
+| Normal | `<leader>s` | Вызвать `:PromptLog` |
 
 ## Как это работает
 

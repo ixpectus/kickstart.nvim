@@ -449,7 +449,11 @@ require('lazy').setup({
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
-
+      require('mini.diff').setup {
+        view = {
+          style = 'sign',
+        },
+      }
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
@@ -562,7 +566,7 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 require 'custom.commands'
 require 'custom.functions'
-require 'custom.ai_prompt'
+require 'custom.prompt_builder'
 require 'custom.autocmd'
 --
 vim.diagnostic.config {

@@ -7,27 +7,27 @@ function get_project_root()
   return vim.fn.expand '%:p:h'
 end
 
---- Wrapper: send visual selection to agent (delegates to ai_prompt).
---- @see custom.ai_prompt.send_selection_to_agent
-function send_selection_to_agent(from, to)
-  return require('custom.ai_prompt').send_selection_to_agent(from, to)
+--- Wrapper: send visual selection to agent (delegates to prompt_builder).
+--- @see custom.prompt_builder.save_prompt_to_clipboard
+function save_prompt_to_clipboard(from, to)
+  return require('custom.prompt_builder').save_prompt_to_clipboard(from, to)
 end
 
 function clear_prompt_log()
-  return require('custom.ai_prompt').clear_prompt_log()
+  return require('custom.prompt_builder').clear_prompt_log()
 end
 
 --- Send visual selection as a command to the Pi agent via herdr.
---- Calls SendSelectionToAgent, reads the clipboard, then sends to Pi.
+--- Calls SavePromptToClipboard, reads the clipboard, then sends to Pi.
 --- @param opts? table { skip_status_check? boolean, tab_id? string }
 function send_command_and_selection_to_pi(opts)
   opts = opts or {}
 
-  -- 1. Запомнить содержимое буфера обмена до вызова SendSelectionToAgent.
+  -- 1. Запомнить содержимое буфера обмена до вызова SavePromptToClipboard.
   local before = vim.fn.getreg '+'
 
-  -- 2. Вызвать SendSelectionToAgent (спрашивает prompt ОДИН РАЗ, кладёт в буфер)
-  require('custom.ai_prompt').send_selection_to_agent()
+  -- 2. Вызвать SavePromptToClipboard (спрашивает prompt ОДИН РАЗ, кладёт в буфер)
+  require('custom.prompt_builder').save_prompt_to_clipboard()
 
   -- 3. Прочитать содержимое буфера обмена после.
   local after = vim.fn.getreg '+'
@@ -48,7 +48,7 @@ end
 
 return {
   get_project_root = get_project_root,
-  send_selection_to_agent = send_selection_to_agent,
+  save_prompt_to_clipboard = save_prompt_to_clipboard,
   clear_prompt_log = clear_prompt_log,
   send_command_and_selection_to_pi = send_command_and_selection_to_pi,
   restart_pi = restart_pi,

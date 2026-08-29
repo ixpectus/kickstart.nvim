@@ -1,11 +1,10 @@
---- Точка входа модуля ai_prompt. Экспортирует публичное API и регистрирует команды.
+--- Точка входа модуля prompt_builder. Экспортирует публичное API и регистрирует команды.
 
 local M = {}
 
-local storage = require 'custom.ai_prompt.storage'
-local builder = require 'custom.ai_prompt.builder'
-local sender = require 'custom.ai_prompt.sender'
-local viewer = require 'custom.ai_prompt.viewer'
+local storage = require 'custom.prompt_builder.storage'
+local builder = require 'custom.prompt_builder.builder'
+local viewer = require 'custom.prompt_builder.viewer'
 
 -- ---------------------------------------------------------------------------
 -- Регистрация команд Neovim.
@@ -13,7 +12,7 @@ local viewer = require 'custom.ai_prompt.viewer'
 
 local function register_commands()
   vim.api.nvim_create_user_command('PromptLog', function()
-    sender.send_selection_to_agent()
+    builder.save_prompt_to_clipboard()
   end, { nargs = 0, desc = 'Send selection to agent and log prompt' })
 
   vim.api.nvim_create_user_command('PromptClear', function()
@@ -33,20 +32,16 @@ local function register_commands()
     viewer.prompt_archive_show { layout = 'full' }
   end, { desc = 'Show the full prompt archive in a scratch buffer' })
 
-  vim.api.nvim_create_user_command('SendSelectionToAgent', function()
-    sender.send_selection_to_agent()
-  end, { desc = 'Send visual selection to AI agent' })
-
   local map = vim.api.nvim_set_keymap
   local default_opts = { noremap = true, silent = true }
 
   -- Visual-mode keymap: <leader>s sends the selection.
-  map('v', '<leader>s', [[<Esc><Cmd>lua require('custom.ai_prompt').send_selection_to_agent()<CR>]], default_opts)
+  map('v', '<leader>s', [[<Esc><Cmd>lua require('custom.prompt_builder').save_prompt_to_clipboard()<CR>]], default_opts)
   -- Esc is neccessary to stop current visual selection,
   -- it marks saved and can be accessed with vim.fn.line "'<"
 
   -- Normal-mode keymap: calls the Ex command.
-  map('n', '<leader>s', [[<Esc><cmd>SendSelectionToAgent<cr>]], default_opts)
+  map('n', '<leader>s', [[<Esc><cmd>PromptLog<cr>]], default_opts)
 end
 
 -- ---------------------------------------------------------------------------
@@ -57,8 +52,7 @@ M.get_prompt_log_path = storage.get_prompt_log_path
 M.get_prompt_archive_path = storage.get_prompt_archive_path
 M.clear_prompt_log = storage.clear_prompt_log
 M.build_prompt_payload = builder.build_prompt_payload
-M.format_lines_with_numbers = builder.format_lines_with_numbers
-M.send_selection_to_agent = sender.send_selection_to_agent
+M.save_prompt_to_clipboard = builder.save_prompt_to_clipboard
 M.prompt_show = viewer.prompt_show
 M.prompt_open = viewer.prompt_open
 M.prompt_archive_show = viewer.prompt_archive_show

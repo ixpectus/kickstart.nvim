@@ -1,6 +1,6 @@
 --- Просмотр логов и архивов промптов.
 
-local storage = require 'custom.ai_prompt.storage'
+local storage = require 'custom.prompt_builder.storage'
 local scratch = require 'custom.scratch'
 
 local M = {}
