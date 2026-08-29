@@ -16,7 +16,7 @@ local function fetch_agent_list()
     return nil
   end
 
-  local raw = string.gsub(result, '^%s*(.-)%s*$', '%1')
+  local raw = vim.trim(result)
   if raw == '' or raw:sub(1, 1) ~= '{' then
     return nil
   end
@@ -25,9 +25,7 @@ local function fetch_agent_list()
   -- Ожидаемый формат: { result = { agents = { ... } } }
   local decoded, err = vim.fn.json_decode(raw)
   if type(decoded) ~= 'table' then
-    vim.schedule(function()
-      vim.notify('herdr: failed to parse agent list: ' .. tostring(err), vim.log.levels.WARN)
-    end)
+    vim.notify('herdr: failed to parse agent list: ' .. tostring(err), vim.log.levels.WARN)
     return nil
   end
 
@@ -42,17 +40,13 @@ function M.find_pi_pane(tab_id)
   tab_id = tab_id or get_tab_id()
 
   if not tab_id then
-    vim.schedule(function()
-      vim.notify('herdr: HERDR_TAB_ID not set. Pass tab_id explicitly or export HERDR_TAB_ID.', vim.log.levels.WARN)
-    end)
+    vim.notify('herdr: HERDR_TAB_ID not set. Pass tab_id explicitly or export HERDR_TAB_ID.', vim.log.levels.WARN)
     return nil
   end
 
   local data = fetch_agent_list()
   if not data or not data.result or not data.result.agents then
-    vim.schedule(function()
-      vim.notify('herdr: could not retrieve agent list', vim.log.levels.ERROR)
-    end)
+    vim.notify('herdr: could not retrieve agent list', vim.log.levels.ERROR)
     return nil
   end
 
@@ -64,9 +58,7 @@ function M.find_pi_pane(tab_id)
     end
   end
 
-  vim.schedule(function()
-    vim.notify('herdr: no Pi agent found for tab_id=' .. tab_id, vim.log.levels.WARN)
-  end)
+  vim.notify('herdr: no Pi agent found for tab_id=' .. tab_id, vim.log.levels.WARN)
 
   return nil
 end

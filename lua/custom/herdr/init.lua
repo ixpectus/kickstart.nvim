@@ -16,7 +16,6 @@ local finder = require 'custom.herdr.finder'
 local sender = require 'custom.herdr.sender'
 local M = {}
 
-
 --- Отправить промпт в окно Pi (проверка статуса — в sender.lua).
 ---
 --- @param prompt string текст промпта для отправки
@@ -28,7 +27,7 @@ function M.send_command_to_pi(prompt, opts)
 
   -- Если pane_id не передан — найти его через tab_id.
   if not pane_id or pane_id == '' then
-pane_id = finder.find_pi_pane(tab_id)
+    pane_id = finder.find_pi_pane(tab_id)
     if not pane_id then
       vim.schedule(function()
         vim.notify('herdr: pane not found for tab_id=' .. tostring(tab_id), vim.log.levels.ERROR)
@@ -82,7 +81,7 @@ function M.restart_pi(opts)
 
   -- Если pane_id не передан — найти его через tab_id.
   if not pane_id or pane_id == '' then
-pane_id = finder.find_pi_pane(opts.tab_id)
+    pane_id = finder.find_pi_pane(opts.tab_id)
     if not pane_id then
       vim.schedule(function()
         vim.notify('herdr: pane not found for restart', vim.log.levels.ERROR)
