@@ -5,3 +5,4 @@
 - Do not duplicate code — extract common logic into private functions.
 - Check with lua-language-server after edits.
 - Format with stylua.
+- Run neovim in headless mode for check

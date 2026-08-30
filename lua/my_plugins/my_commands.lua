@@ -1,8 +1,36 @@
+--- Пользовательские команды для telescope.
+
 local pickers = require 'telescope.pickers'
 local actions = require 'telescope.actions'
-local finders = require 'telescope.finders'
-local conf = require('telescope.config').values
 local action_state = require 'telescope.actions.state'
+local conf = require('telescope.config').values
+
+local M = {}
+
+local custom_commands = function(opts)
+  return pickers.new(opts, {
+    prompt_title = 'Custom commands',
+    finder = require('telescope.finders').new_table {
+      results = opts.commands,
+      entry_maker = function(entry)
+        return {
+          value = entry,
+          display = entry[1],
+          ordinal = entry[1],
+        }
+      end,
+    },
+    sorter = conf.generic_sorter(opts),
+    attach_mappings = function(prompt_bufnr)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        vim.cmd(selection.value[2])
+      end)
+      return true
+    end,
+  })
+end
 
 function get_commands()
   local commands = {
@@ -36,45 +64,7 @@ function get_commands()
   return resCommands
 end
 
-custom_commands = function(opts)
-  return pickers.new(opts, {
-    prompt_title = 'Custom commands',
-    finder = finders.new_table {
-      results = opts.commands,
-      entry_maker = function(entry)
-        return {
-          value = entry,
-          display = entry[1],
-          ordinal = entry[1],
-        }
-      end,
-    },
-    sorter = conf.generic_sorter(opts),
-    attach_mappings = function(prompt_bufnr)
-      actions.select_default:replace(function()
-        local selection = action_state.get_selected_entry()
-        actions.close(prompt_bufnr)
-        vim.cmd(selection.value[2])
-      end)
-      return true
-    end,
-  })
+function M.open_commands()
+  custom_commands(require('telescope.themes').get_dropdown { commands = get_commands() }):find()
 end
-
-local map = vim.api.nvim_set_keymap
-local default_opts = { noremap = true, silent = true }
-map('n', '<C-c>', [[<cmd>lua custom_commands(require("telescope.themes").get_dropdown{commands = get_commands()}):find()<cr>]], default_opts)
-
-vim.api.nvim_create_user_command('SendCommandAndSelectionToPi', function()
-  require('custom.functions').send_command_and_selection_to_pi()
-end, { desc = 'Send visual selection to Pi agent via herdr' })
-
--- Normal-mode keymap: calls the Ex command (аналог <leader>s).
-map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opts)
-
--- Visual-mode keymap: calls SendCommandAndSelectionToPi.
-map('v', '<leader> ', [[<Esc><Cmd>lua require('custom.functions').send_command_and_selection_to_pi()<CR>]], default_opts)
-
-vim.api.nvim_create_user_command('PiSessionsTelescope', function()
-  require('my_plugins.pi_sessions').find()
-end, { desc = 'Show pi sessions in telescope' })
+return M
