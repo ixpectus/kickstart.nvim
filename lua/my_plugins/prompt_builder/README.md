@@ -1,82 +1,88 @@
 # prompt_builder
 
-Модуль для выделения кода и формирования промпта для AI-агента. Выделенный код с номерами строк, пользовательский промпт и путь к файлу формируются в payload и копируются в системный буфер обмена (`+` register). Все промпты логируются в файл.
+Выделение кода, формирование промпта для AI-агента, копирование в буфер обмена, логирование.
 
-## Структура
+## Команды
 
-| Файл | Назначение |
-|------|-----------|
-| `init.lua` | Точка входа, экспорт публичного API, регистрация команд и keymaps |
-| `storage.lua` | Пути к файлам, запись/чтение логов и архивов |
-| `builder.lua` | Формирование payload (содержимое + форматирование) |
-| `sender.lua` | `SavePromptToClipboard` — основная точка входа (сборка payload + буфер обмена) |
-| `viewer.lua` | Просмотр логов и архивов через scratch-буфер |
-
-## Публичное API
-
-```lua
-local ap = require 'custom.prompt_builder'
-
--- Пути к файлам
-ap.get_prompt_log_path()       -- '/home/.../data/prompts.log'
-ap.get_prompt_archive_path()   -- '/home/.../data/prompts_archive.log'
-
--- Отправка выделения
-ap.save_prompt_to_clipboard(from, to)
-
--- Формирование payload
-ap.build_prompt_payload(fname, from, to, selected_text, prompt)
-ap.format_lines_with_numbers(from, to)
-
--- Логи
-ap.clear_prompt_log()     -- очистить лог (с архивацией)
-ap.prompt_show(n)         -- показать последние N записей
-ap.prompt_open()          -- открыть файл логов
-ap.prompt_archive_show()  -- показать полный архив
+```vim
+:PromptLog
+:PromptClear
+:PromptShow [N]
+:PromptOpen
+:PromptArchiveShow
 ```
 
-## Команды Neovim
+`:lua require('my_plugins.prompt_builder').save_prompt_to_clipboard()`
+`:lua require('my_plugins.prompt_builder').clear_prompt_log()`
+`:lua require('my_plugins.prompt_builder').prompt_show(50, { layout = 'full' })`
+`:lua require('my_plugins.prompt_builder').prompt_open()`
+`:lua require('my_plugins.prompt_builder').prompt_archive_show({ layout = 'full' })`
 
-| Команда | Описание |
-|---------|----------|
-| `:PromptLog` | Отправить выделение в буфер и записать в лог |
-| `:PromptClear` | Очистить лог (с архивацией) |
-| `:PromptShow [N]` | Показать последние N записей лога |
-| `:PromptOpen` | Открыть файл логов в новом буфере |
-| `:PromptArchiveShow` | Показать полный архив |
+### :PromptLog
 
-## Keymaps
+Отправить выделение в буфер и записать в лог.
 
-| Режим | Клавиша | Действие |
-|-------|---------|----------|
-| Visual | `<leader>s` | Отправить выделение (вызывает `SavePromptToClipboard`) |
-| Normal | `<leader>s` | Вызвать `:PromptLog` |
+```vim
+:PromptLog
+```
 
-## Как это работает
+### :PromptClear
 
-1. В visual-режиме выделяешь блок кода и нажимаешь `<leader>s`.
-2. Модуль считывает выделенные строки с номерами строк.
-3. Запрашивает у пользователя текст промпта через `vim.fn.input()`.
-4. Формирует payload вида:
+Очистить лог (с архивацией).
 
-   ```
-   File: /home/user/project/main.lua
-   Lines: 10-25
+```vim
+:PromptClear
+```
 
-   10: function foo()
-   11:   local x = bar()
-   12:   ...
-   25: end
+### :PromptShow [N]
 
-   Prompt: рефакторинг
-   ```
+Показать последние N записей лога в scratch-окне.
 
-5. Копирует payload в системный буфер обмена (`+` register).
-6. Записывает запись в лог-файл `prompts.log`.
+```vim
+:PromptShow
+:PromptShow 50
+```
 
-## Файлы логов
+```lua
+:lua require('my_plugins.prompt_builder').prompt_show(50, { layout = 'full' })
+```
 
-| Файл | Путь |
-|------|------|
-| Лог | `~/.local/share/nvim/prompts.log` |
-| Архив | `~/.local/share/nvim/prompts_archive.log` |
+### :PromptOpen
+
+Открыть файл логов в новом буфере.
+
+```vim
+:PromptOpen
+```
+
+```lua
+:lua require('my_plugins.prompt_builder').prompt_open()
+```
+
+### :PromptArchiveShow
+
+Показать полный архив промптов в scratch-окне.
+
+```vim
+:PromptArchiveShow
+```
+
+```lua
+:lua require('my_plugins.prompt_builder').prompt_archive_show({ layout = 'full' })
+```
+
+### save_prompt_to_clipboard
+
+Отправить выделение кода в буфер обмена и записать в лог.
+
+```lua
+:lua require('my_plugins.prompt_builder').save_prompt_to_clipboard()
+```
+
+### clear_prompt_log
+
+Очистить лог промптов (с архивацией).
+
+```lua
+:lua require('my_plugins.prompt_builder').clear_prompt_log()
+```
