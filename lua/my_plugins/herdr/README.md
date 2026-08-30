@@ -2,13 +2,6 @@
 
 Отправка команд агенту Pi из Neovim через Herdr.
 
-## Команды
-
-```vim
-:PiRestart
-:PiRestart my-session
-```
-
 `:lua require('my_plugins.herdr').send_command_to_pi('Привет')`
 `:lua require('my_plugins.herdr').send_command_to_pi('Сделай рефакторинг', { pane_id = 'wE:p1', tab_id = 'wE:t1' })`
 `:lua require('my_plugins.herdr').send_command_to_pi('Сделай рефакторинг', { pane_id = 'wH:pD', skip_status_check = true })`
@@ -19,14 +12,10 @@
 `:lua require('my_plugins.herdr').restart_pi { pane_id = 'wE:p1', quit_timeout = 60 }`
 `:lua require('my_plugins.herdr').restart_pi { tab_id = 'wE:t1', quit_timeout = 60 }`
 
-### :PiRestart
 
-Перезапустить агент Pi.
+### send_command_to_pi
 
-```vim
-:PiRestart
-:PiRestart my-session
-```
+Отправить промпт в окно Pi. Автопоиск pane_id из `$HERDR_TAB_ID`, либо явные `pane_id` / `tab_id`.
 
 ### send_command_to_pi
 

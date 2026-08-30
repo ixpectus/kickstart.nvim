@@ -104,15 +104,6 @@ function M.close(bufnr)
   end
 end
 
---- Register :ScratchClose user command.
-local function register_commands()
-  vim.api.nvim_create_user_command('ScratchClose', function()
-    M.close()
-  end, { desc = 'Close the current scratch window' })
-end
-
-register_commands()
-
 --- Run a shell command and insert its output into a scratch buffer.
 --- @param cmd string
 --- @param opts? table forwarded to `open` (e.g. { layout = 'split' }).

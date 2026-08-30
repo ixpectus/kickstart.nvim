@@ -159,10 +159,4 @@ function M.list()
     :find()
 end
 
-function M.setup()
-  vim.api.nvim_create_user_command('PromptsList', M.list, {
-    desc = 'List prompts from the prompts/ directory in telescope',
-  })
-end
-
 return M

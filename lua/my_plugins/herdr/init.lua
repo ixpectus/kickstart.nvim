@@ -89,24 +89,8 @@ function M.restart_pi(opts)
       return
     end
 
-require('my_plugins.herdr.restart').restart_pi(pane_id, opts)
+    require('my_plugins.herdr.restart').restart_pi(pane_id, opts)
   end
-end
-
-local function register_commands()
-  vim.api.nvim_create_user_command('PiRestart', function(args)
-    M.restart_pi { session_id = args.args or nil }
-  end, {
-    nargs = '*',
-    desc = 'Restart the Pi agent in the current Herdr session',
-    complete = function()
-      return {}
-    end,
-  })
-end
-
-function M.setup()
-  register_commands()
 end
 
 return M
