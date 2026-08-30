@@ -7,16 +7,6 @@ function get_project_root()
   return vim.fn.expand '%:p:h'
 end
 
---- Wrapper: send visual selection to agent (delegates to prompt_builder).
---- @see custom.prompt_builder.save_prompt_to_clipboard
-function save_prompt_to_clipboard(from, to)
-  return require('custom.prompt_builder').save_prompt_to_clipboard(from, to)
-end
-
-function clear_prompt_log()
-  return require('custom.prompt_builder').clear_prompt_log()
-end
-
 --- Send visual selection as a command to the Pi agent via herdr.
 --- Calls SavePromptToClipboard, reads the clipboard, then sends to Pi.
 --- @param opts? table { skip_status_check? boolean, tab_id? string }
@@ -27,7 +17,7 @@ function send_command_and_selection_to_pi(opts)
   local before = vim.fn.getreg '+'
 
   -- 2. Вызвать SavePromptToClipboard (спрашивает prompt ОДИН РАЗ, кладёт в буфер)
-  require('custom.prompt_builder').save_prompt_to_clipboard()
+  require('my_plugins.prompt_builder').save_prompt_to_clipboard()
 
   -- 3. Прочитать содержимое буфера обмена после.
   local after = vim.fn.getreg '+'
@@ -38,12 +28,21 @@ function send_command_and_selection_to_pi(opts)
   end
 
   -- 5. Отправить через SendCommandToPi.
-  require('custom.herdr').send_command_to_pi(after, opts)
+  require('my_plugins.herdr').send_command_to_pi(after, opts)
 end
 
+--- Wrapper: send visual selection to agent (delegates to prompt_builder).
+--- @see my_plugins.prompt_builder.save_prompt_to_clipboard
+function save_prompt_to_clipboard(from, to)
+  return require('my_plugins.prompt_builder').save_prompt_to_clipboard(from, to)
+end
+
+function clear_prompt_log()
+  return require('my_plugins.prompt_builder').clear_prompt_log()
+end
 --- Перезапустить агент Pi.
 function restart_pi()
-  require('custom.herdr').restart_pi()
+  require('my_plugins.herdr').restart_pi()
 end
 
 return {

@@ -50,11 +50,10 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+require 'options.autocmd'
 require 'custom.commands'
-require 'custom.functions'
-require 'my_plugins.prompt_builder'
-require 'custom.autocmd'
---
+require 'my_plugins'
+
 vim.diagnostic.config {
   virtual_text = true,
   -- virtual_lines = { current_line = true },
