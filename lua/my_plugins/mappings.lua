@@ -5,7 +5,7 @@ local M = {}
 local map = vim.api.nvim_set_keymap
 local default_opts = { noremap = true, silent = true }
 
-map('n', '<C-c>', [[<cmd>lua require("my_plugins.my_commands").open_commands()<cr>]], default_opts)
+map('n', '<C-c>', [[<cmd>lua require("my_plugins.my_commands").open()<cr>]], default_opts)
 
 -- Normal-mode keymap: calls the Ex command (аналог <leader>s).
 map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opts)
