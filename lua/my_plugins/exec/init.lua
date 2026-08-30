@@ -5,7 +5,7 @@
 ---
 --- Handlers are registered in handler.lua by file extension.
 ---
---- @usage local exec = require 'custom.exec'
+--- @usage local exec = require 'my_plugins.exec'
 --- @usage exec.run_file('/path/to/script.sh')
 --- @usage -- or from vim:  :Exec /path/to/script.sh
 
@@ -47,7 +47,7 @@ function M.run_file(path)
     return
   end
 
-  local handler = require 'custom.exec.handler'
+  local handler = require 'my_plugins.exec.handler'
 
   local ext = vim.fn.fnamemodify(path, ':e')
   local handler_fn = ext and handler.handlers[ext]

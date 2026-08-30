@@ -3,17 +3,17 @@
 ---
 --- ```lua
 --- -- Отправить команду в найденное окно (tab_id из $HERDR_TAB_ID)
---- require('custom.herdr').send_command_to_pi('Привет, покажи структуру проекта')
+--- require('my_plugins.herdr').send_command_to_pi('Привет, покажи структуру проекта')
 ---
 --- -- С явным pane_id и tab_id
---- require('custom.herdr').send_command_to_pi('Сделай рефакторинг', { pane_id = 'wE:p1', tab_id = 'wE:t1' })
+--- require('my_plugins.herdr').send_command_to_pi('Сделай рефакторинг', { pane_id = 'wE:p1', tab_id = 'wE:t1' })
 ---
 --- -- Без проверки статуса (поставить задачу в очередь, даже если агент working)
---- require('custom.herdr').send_command_to_pi('Сделай рефакторинг', { pane_id = 'wH:pD', skip_status_check = true })
+--- require('my_plugins.herdr').send_command_to_pi('Сделай рефакторинг', { pane_id = 'wH:pD', skip_status_check = true })
 --- ```
 
-local finder = require 'custom.herdr.finder'
-local sender = require 'custom.herdr.sender'
+local finder = require 'my_plugins.herdr.finder'
+local sender = require 'my_plugins.herdr.sender'
 local M = {}
 
 --- Отправить промпт в окно Pi (проверка статуса — в sender.lua).
@@ -89,7 +89,7 @@ function M.restart_pi(opts)
       return
     end
 
-    require('custom.herdr.restart').restart_pi(pane_id, opts)
+require('my_plugins.herdr.restart').restart_pi(pane_id, opts)
   end
 end
 

@@ -2,13 +2,13 @@
 ---
 --- Extend by adding a function here and registering it in the `handlers` table.
 ---
---- @usage local handler = require 'custom.exec.handler'
+--- @usage local handler = require 'my_plugins.exec.handler'
 --- @usage handler.shell('/path/to/script.sh')
 --- @usage handler.lua('/path/to/script.lua')
 
 local M = {}
 
-local scratch = require 'custom.scratch'
+local scratch = require 'my_plugins.scratch'
 
 -- Owner + group + other execute bits: 64 + 8 + 1 = 73.
 local EXEC_MASK = 73

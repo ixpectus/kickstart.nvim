@@ -20,15 +20,7 @@ end
 --- @param prompt string user prompt
 function M.log_prompt_to_file(fname, from, to, selected_text, prompt)
   local timestamp = vim.fn.strftime '%Y-%m-%d %H:%M:%S'
-  local entry = string.format(
-    '--- [%s] ---\nFile: %s\nLines: %d-%d\n\n%s\n\nPrompt: %s\n\n',
-    timestamp,
-    fname,
-    from,
-    to,
-    selected_text,
-    prompt
-  )
+  local entry = string.format('--- [%s] ---\nFile: %s\nLines: %d-%d\n\n%s\n\nPrompt: %s\n\n', timestamp, fname, from, to, selected_text, prompt)
   local f = io.open(M.get_prompt_log_path(), 'a')
   if f then
     f:write(entry)

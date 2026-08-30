@@ -2,7 +2,7 @@
 
 local M = {}
 
-local storage = require 'custom.prompt_builder.storage'
+local storage = require 'my_plugins.prompt_builder.storage'
 
 --- Build line numbers text block.
 --- @param from number start line (1-indexed)

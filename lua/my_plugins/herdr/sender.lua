@@ -1,6 +1,6 @@
 --- Отправка текста и клавиш в окно Pi через `herdr pane`.
 ---
-local finder = require 'custom.herdr.finder'
+local finder = require 'my_plugins.herdr.finder'
 local M = {}
 
 --- Выполнить одну команду `herdr pane ...`.

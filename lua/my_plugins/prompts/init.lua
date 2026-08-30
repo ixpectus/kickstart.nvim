@@ -4,7 +4,7 @@
 --- становится элементом пикера: имя файла — display, содержимое — превью.
 --- По Enter промпт вставляется в текущий буфер на месте курсора.
 ---
---- @usage local prompts = require 'custom.prompts'
+--- @usage local prompts = require 'my_plugins.prompts'
 --- @usage prompts.list() -- или :PromptsList
 
 local M = {}

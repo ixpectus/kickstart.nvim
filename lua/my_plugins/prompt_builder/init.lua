@@ -2,9 +2,9 @@
 
 local M = {}
 
-local storage = require 'custom.prompt_builder.storage'
-local builder = require 'custom.prompt_builder.builder'
-local viewer = require 'custom.prompt_builder.viewer'
+local storage = require 'my_plugins.prompt_builder.storage'
+local builder = require 'my_plugins.prompt_builder.builder'
+local viewer = require 'my_plugins.prompt_builder.viewer'
 
 -- ---------------------------------------------------------------------------
 -- Регистрация команд Neovim.
@@ -36,7 +36,7 @@ local function register_commands()
   local default_opts = { noremap = true, silent = true }
 
   -- Visual-mode keymap: <leader>s sends the selection.
-  map('v', '<leader>s', [[<Esc><Cmd>lua require('custom.prompt_builder').save_prompt_to_clipboard()<CR>]], default_opts)
+map('v', '<leader>s', [[<Esc><Cmd>lua require('my_plugins.prompt_builder').save_prompt_to_clipboard()<CR>]], default_opts)
   -- Esc is neccessary to stop current visual selection,
   -- it marks saved and can be accessed with vim.fn.line "'<"
 

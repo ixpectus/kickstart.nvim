@@ -1,7 +1,7 @@
-require('custom.prompt_builder').setup()
-require('custom.herdr').setup()
-require('custom.exec').setup()
-require('custom.prompts').setup()
+require('my_plugins.prompt_builder').setup()
+require('my_plugins.herdr').setup()
+require('my_plugins.exec').setup()
+require('my_plugins.prompts').setup()
 
 local pickers = require 'telescope.pickers'
 local actions = require 'telescope.actions'
@@ -14,12 +14,12 @@ function get_commands()
     { 'open prompts file', ':PromptOpen' },
     { 'clear prompts file', ':PromptClear' },
     { 'pi restart', ':PiRestart' },
-    { 'scratch', ':lua require"custom.scratch".open()' },
-    { 'git log', ':lua require"custom.scratch".command("git log")' },
-    { 'pi sessions telescope', [[:lua require('custom.telescope_sessions').find()]] },
-    { 'pi sessions', ':lua require"custom.scratch".command("pi_sessions_list.py")' },
-    { 'pi sessions message 50', ':lua require"custom.scratch".command("pi_sessions_list.py --min-messages 50")' },
-    { 'pi sessions minute 30', ':lua require"custom.scratch".command("pi_sessions_list.py --min-duration 1800")' },
+{ 'scratch', ':lua require"my_plugins.scratch".open()' },
+    { 'git log', ':lua require"my_plugins.scratch".command("git log")' },
+    { 'pi sessions telescope', [[:lua require('my_plugins.pi_sessions').find()]] },
+    { 'pi sessions', ':lua require"my_plugins.scratch".command("pi_sessions_list.py")' },
+    { 'pi sessions message 50', ':lua require"my_plugins.scratch".command("pi_sessions_list.py --min-messages 50")' },
+    { 'pi sessions minute 30', ':lua require"my_plugins.scratch".command("pi_sessions_list.py --min-duration 1800")' },
     -- { 'pg pro repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/pg_pro"}}' },
     -- { 'mine projects', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/projects"}}' },
     -- { 'nvim plugin repos', ':lua require"telescope".extensions.repo.list{search_dirs = {"~/.local/share/kickstart.nvim/lazy/"}}' },
@@ -81,5 +81,5 @@ map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opt
 map('v', '<leader> ', [[<Esc><Cmd>lua require('custom.functions').send_command_and_selection_to_pi()<CR>]], default_opts)
 
 vim.api.nvim_create_user_command('PiSessionsTelescope', function()
-  require('custom.telescope_sessions').find()
+require('my_plugins.pi_sessions').find()
 end, { desc = 'Show pi sessions in telescope' })

@@ -4,7 +4,7 @@
 --- Действия: открыть файл сессии или скопировать id в буфер.
 ---
 --- ```lua
---- require('custom.herdr.telescope_sessions').find()
+--- require('my_plugins.pi_sessions').find()
 --- ```
 
 local pickers = require 'telescope.pickers'

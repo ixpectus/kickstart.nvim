@@ -1,5 +1,5 @@
-local sender = require 'custom.herdr.sender'
-local waiter = require 'custom.herdr.waiter'
+local sender = require 'my_plugins.herdr.sender'
+local waiter = require 'my_plugins.herdr.waiter'
 
 local M = {}
 

@@ -1,7 +1,7 @@
 --- Просмотр логов и архивов промптов.
 
-local storage = require 'custom.prompt_builder.storage'
-local scratch = require 'custom.scratch'
+local storage = require 'my_plugins.prompt_builder.storage'
+local scratch = require 'my_plugins.scratch'
 
 local M = {}
 

@@ -4,7 +4,7 @@
 --- @class waiter
 --- @field WaitForStatus fun(pane_id: string, target_statuses?: table, timeout?: number, on_done?: function)
 
-local finder = require 'custom.herdr.finder'
+local finder = require 'my_plugins.herdr.finder'
 local M = {}
 
 --- Асинхронно ждать, пока агент достигнет целевого статуса или исчезнет.
