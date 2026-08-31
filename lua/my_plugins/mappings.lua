@@ -1,7 +1,5 @@
 --- Маппинги my_plugins.
 
-local M = {}
-
 local map = vim.api.nvim_set_keymap
 local default_opts = { noremap = true, silent = true }
 
@@ -12,5 +10,3 @@ map('n', '<leader> ', [[<Esc><cmd>SendCommandAndSelectionToPi<cr>]], default_opt
 
 -- Visual-mode keymap: calls SendCommandAndSelectionToPi.
 map('v', '<leader> ', [[<Esc><Cmd>SendCommandAndSelectionToPi<CR>]], default_opts)
-
-return M

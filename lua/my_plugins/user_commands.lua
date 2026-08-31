@@ -17,8 +17,6 @@
 --- - :SendCommandAndSelectionToPi — Send visual selection to Pi agent via herdr
 --- - :PiSessionsTelescope       — Show pi sessions in telescope
 
-local M = {}
-
 -- ---------------------------------------------------------------------------
 -- exec
 -- ---------------------------------------------------------------------------
@@ -104,5 +102,3 @@ end, { desc = 'Send visual selection to Pi agent via herdr' })
 vim.api.nvim_create_user_command('PiSessionsTelescope', function()
   require('my_plugins.pi_sessions').find()
 end, { desc = 'Show pi sessions in telescope' })
-
-return M

@@ -3,7 +3,6 @@
 local pickers = require 'telescope.pickers'
 local actions = require 'telescope.actions'
 local action_state = require 'telescope.actions.state'
-local conf = require('telescope.config').values
 
 local M = {}
 
@@ -34,7 +33,6 @@ function M.open()
           return { value = e[2], display = e[1], ordinal = e[1] }
         end,
       },
-      sorter = conf.generic_sorter {},
       attach_mappings = function(prompt_bufnr)
         actions.select_default:replace(function()
           local sel = action_state.get_selected_entry()
