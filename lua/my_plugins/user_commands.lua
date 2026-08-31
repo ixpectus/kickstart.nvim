@@ -24,25 +24,18 @@
 vim.api.nvim_create_user_command('Exec', function(opts)
   require('my_plugins.exec').run_file(opts.args or '')
 end, {
-  nargs = '*',
+  nargs = '?',
   desc = 'Run a file in a scratch window',
-  complete = function(_, context)
-    return vim.fn.getcompletion(context.line, 'file')
-  end,
 })
 
 -- ---------------------------------------------------------------------------
 -- herdr
 -- ---------------------------------------------------------------------------
 
-vim.api.nvim_create_user_command('PiRestart', function(args)
-  require('my_plugins.herdr').restart_pi { session_id = args.args or nil }
+vim.api.nvim_create_user_command('PiRestart', function(opts)
+  require('my_plugins.herdr').restart_pi { session_id = opts.args or nil }
 end, {
-  nargs = '*',
   desc = 'Restart the Pi agent in the current Herdr session',
-  complete = function()
-    return {}
-  end,
 })
 
 -- ---------------------------------------------------------------------------
@@ -51,7 +44,7 @@ end, {
 
 vim.api.nvim_create_user_command('PromptLog', function()
   require('my_plugins.prompt_builder').save_prompt_to_clipboard()
-end, { nargs = 0, desc = 'Send selection to agent and log prompt' })
+end, { desc = 'Send selection to agent and log prompt' })
 
 vim.api.nvim_create_user_command('PromptClear', function()
   require('my_plugins.prompt_builder').clear_prompt_log()
